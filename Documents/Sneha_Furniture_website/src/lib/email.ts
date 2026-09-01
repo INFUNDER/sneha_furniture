@@ -32,7 +32,7 @@ export async function sendOrderConfirmationEmail(userEmail: string, orderData: a
       `,
     });
     
-    console.log('Order confirmation email sent successfully:', data.id);
+    console.log('Order confirmation email sent successfully:', data.data?.id);
     return data;
   } catch (error) {
     console.error('Failed to send order confirmation email:', error);

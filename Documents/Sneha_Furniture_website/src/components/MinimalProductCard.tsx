@@ -6,19 +6,18 @@ import { useCart } from '@/context/CartContext';
 
 export default function MinimalProductCard({ product }: { product: any }) {
   const [quantity, setQuantity] = useState(1);
-  const { addItem } = useCart();
+  const { addToCart } = useCart();
   
   const images = JSON.parse(product.images || '[]');
   const coverImage = images[0] || 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=800&q=80';
 
   const handleAddToCart = () => {
-    addItem({
+    addToCart({
       id: product.id,
       title: product.title,
       price: product.discountPrice || product.price,
-      quantity,
       image: coverImage
-    });
+    }, quantity);
   };
 
   return (
