@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Outfit } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import WhatsAppWidget from "@/components/WhatsAppWidget";
 import { CartProvider } from "@/context/CartContext";
@@ -86,6 +87,7 @@ export default function RootLayout({
 
           <WhatsAppWidget />
         </CartProvider>
+        <Analytics />
       </body>
     </html>
   );
