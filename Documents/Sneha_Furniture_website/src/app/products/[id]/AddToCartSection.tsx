@@ -6,17 +6,16 @@ import { useRouter } from 'next/navigation';
 
 export default function AddToCartSection({ product, coverImage }: { product: any, coverImage: string }) {
   const [quantity, setQuantity] = useState(1);
-  const { addItem } = useCart();
+  const { addToCart } = useCart();
   const [isAdded, setIsAdded] = useState(false);
 
   const handleAddToCart = () => {
-    addItem({
+    addToCart({
       id: product.id,
       title: product.title,
       price: product.discountPrice || product.price,
-      quantity: quantity,
       image: coverImage
-    });
+    }, quantity);
     
     setIsAdded(true);
     setTimeout(() => setIsAdded(false), 2000);
