@@ -60,16 +60,28 @@ export default function RootLayout({
           </main>
           
           {/* Footer */}
-          <footer className="bg-white text-black py-16 px-6 max-w-[1400px] mx-auto w-full flex flex-col md:flex-row justify-between items-center gap-8">
-            <div className="flex flex-col">
-              <h2 className="text-4xl md:text-5xl font-black font-sans uppercase tracking-tight">SNEHA FURNITURE</h2>
-              <p className="mt-4 text-xs font-bold uppercase tracking-widest opacity-50 text-left">
-                &copy; {new Date().getFullYear()} SNEHA FURNITURE
-              </p>
+          <footer className="bg-white text-black py-16 px-6 max-w-[1400px] mx-auto w-full flex flex-col gap-8">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-8 w-full">
+              <div className="flex flex-col">
+                <h2 className="text-4xl md:text-5xl font-black font-sans uppercase tracking-tight">SNEHA FURNITURE</h2>
+                <p className="mt-4 text-xs font-bold uppercase tracking-widest opacity-50 text-left">
+                  &copy; {new Date().getFullYear()} SNEHA FURNITURE
+                </p>
+              </div>
+              <a href="mailto:ronitmittal0@gmail.com" className="text-4xl md:text-5xl font-black font-sans uppercase tracking-tight hover:opacity-70 transition break-all text-center md:text-right">
+                RONITMITTAL0@GMAIL.COM
+              </a>
             </div>
-            <a href="mailto:ronitmittal0@gmail.com" className="text-4xl md:text-5xl font-black font-sans uppercase tracking-tight hover:opacity-70 transition">
-              RONITMITTAL0@GMAIL.COM
-            </a>
+            
+            <div className="flex flex-wrap gap-4 text-xs font-bold uppercase tracking-widest opacity-50 justify-center md:justify-start mt-8 border-t border-black/10 pt-8">
+              <a href="/privacy" className="hover:opacity-100 transition">Privacy Policy</a>
+              <span className="hidden md:inline">|</span>
+              <a href="/terms" className="hover:opacity-100 transition">Terms & Conditions</a>
+              <span className="hidden md:inline">|</span>
+              <a href="/refund" className="hover:opacity-100 transition">Refund Policy</a>
+              <span className="hidden md:inline">|</span>
+              <a href="/shipping" className="hover:opacity-100 transition">Shipping Policy</a>
+            </div>
           </footer>
 
           <WhatsAppWidget />
