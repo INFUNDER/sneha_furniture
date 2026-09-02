@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation';
 import AddToCartSection from './AddToCartSection';
 import Link from 'next/link';
 import MinimalProductCard from '@/components/MinimalProductCard';
+import ReviewSection from '@/components/ReviewSection';
+import { getSession } from '@/lib/auth';
 
 export default async function ProductDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
@@ -23,6 +25,16 @@ export default async function ProductDetailsPage({ params }: { params: Promise<{
     take: 3,
     orderBy: { createdAt: 'desc' }
   });
+
+  // Fetch reviews
+  const reviews = await prisma.review.findMany({
+    where: { productId: product.id, status: 'APPROVED' },
+    include: { user: { select: { name: true } } },
+    orderBy: { createdAt: 'desc' }
+  });
+
+  const session = await getSession();
+  const isLoggedIn = !!session;
 
   const images = JSON.parse(product.images || '[]');
   const coverImage = images[0] || 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=800&q=80';
@@ -95,6 +107,8 @@ export default async function ProductDetailsPage({ params }: { params: Promise<{
           </div>
         </div>
       </div>
+
+      <ReviewSection productId={product.id} reviews={reviews} isLoggedIn={isLoggedIn} />
       
       {/* Related Products */}
       {relatedProducts.length > 0 && (

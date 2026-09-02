@@ -26,19 +26,19 @@ export default async function Home() {
         </h2>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <Link href="/shop" className="group relative aspect-square overflow-hidden bg-gray-100 flex items-center justify-center">
+          <Link href="/shop?category=Sofa" className="group relative aspect-square overflow-hidden bg-gray-100 flex items-center justify-center">
             <div className="absolute inset-0 bg-[url('/sofa-pic.jpg')] bg-cover bg-center transition-transform duration-700 group-hover:scale-105" />
             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
             <h3 className="relative z-10 text-4xl font-black uppercase text-white tracking-widest">Sofa</h3>
           </Link>
           
-          <Link href="/shop" className="group relative aspect-square overflow-hidden bg-gray-100 flex items-center justify-center">
+          <Link href="/shop?category=Table" className="group relative aspect-square overflow-hidden bg-gray-100 flex items-center justify-center">
             <div className="absolute inset-0 bg-[url('/table.jpg')] bg-cover bg-center transition-transform duration-700 group-hover:scale-105" />
             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
             <h3 className="relative z-10 text-4xl font-black uppercase text-white tracking-widest">Table</h3>
           </Link>
           
-          <Link href="/shop" className="group relative aspect-square overflow-hidden bg-gray-100 flex items-center justify-center">
+          <Link href="/shop?category=Chair" className="group relative aspect-square overflow-hidden bg-gray-100 flex items-center justify-center">
             <div className="absolute inset-0 bg-[url('/chair.jpg')] bg-cover bg-center transition-transform duration-700 group-hover:scale-105" />
             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
             <h3 className="relative z-10 text-4xl font-black uppercase text-white tracking-widest">Chair</h3>

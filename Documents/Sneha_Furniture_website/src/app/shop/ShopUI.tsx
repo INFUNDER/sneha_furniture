@@ -17,12 +17,14 @@ type Product = {
 
 export default function ShopUI({ 
   initialProducts, 
-  categories 
+  categories,
+  initialCategory = 'All'
 }: { 
   initialProducts: Product[], 
-  categories: { category: string }[] 
+  categories: { category: string }[],
+  initialCategory?: string
 }) {
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<string>('newest');
 
