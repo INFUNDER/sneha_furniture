@@ -80,7 +80,7 @@ export default function ContactPage() {
              <h3 className="text-xl font-bold mb-2">Sneha Furniture</h3>
              <p className="text-gray-600 mb-4">Located in the heart of Dehradun, easily accessible from Saharanpur Road.</p>
              <a 
-               href="https://maps.google.com/?q=7+Saharanpur+Rd+Patel+Nagar+Dehradun" 
+               href="https://maps.app.goo.gl/FFm6prxW6b9yJtcKA" 
                target="_blank" 
                rel="noopener noreferrer"
                className="inline-block bg-primary text-white px-6 py-2 rounded-sm hover:bg-primary/90 transition"
