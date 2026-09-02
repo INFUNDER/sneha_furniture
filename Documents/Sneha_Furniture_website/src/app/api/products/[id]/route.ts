@@ -5,6 +5,16 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
   try {
     const { id } = await params;
     
+    // First delete associated records to prevent foreign key constraint errors
+    await prisma.orderItem.deleteMany({
+      where: { productId: id }
+    });
+    
+    await prisma.review.deleteMany({
+      where: { productId: id }
+    });
+
+    // Then delete the product
     await prisma.product.delete({
       where: { id }
     });
