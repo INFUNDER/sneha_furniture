@@ -48,7 +48,7 @@ export default async function ProductDetailsPage({ params }: { params: Promise<{
             <img src={coverImage} alt={product.title} className="w-full h-full object-cover" />
           </div>
           <div className="grid grid-cols-3 gap-6">
-            {[coverImage, coverImage, coverImage].map((img, idx) => (
+            {images.slice(0, 3).map((img: string, idx: number) => (
               <div key={idx} className="aspect-square bg-[#F5F5F5] overflow-hidden cursor-pointer opacity-50 hover:opacity-100 transition">
                 <img src={img} alt={`Thumbnail ${idx}`} className="w-full h-full object-cover" />
               </div>
