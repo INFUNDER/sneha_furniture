@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useCart } from '@/context/CartContext';
 import { useRouter } from 'next/navigation';
+import WishlistButton from '@/components/WishlistButton';
 
 export default function AddToCartSection({ product, coverImage }: { product: any, coverImage: string }) {
   const [quantity, setQuantity] = useState(1);
@@ -46,6 +47,10 @@ export default function AddToCartSection({ product, coverImage }: { product: any
         >
           {isAdded ? 'ADDED ✓' : product.stock > 0 ? 'ADD TO CART' : 'OUT OF STOCK'}
         </button>
+
+        <div className="flex items-center justify-center h-16 w-16 border border-black rounded-full hover:bg-gray-50 transition">
+          <WishlistButton productId={product.id} className="!relative !top-auto !right-auto !bg-transparent" />
+        </div>
       </div>
       
       {product.stock > 0 && product.stock <= 5 && (

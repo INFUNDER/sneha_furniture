@@ -4,8 +4,9 @@ import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import WhatsAppWidget from "@/components/WhatsAppWidget";
 import { CartProvider } from "@/context/CartContext";
+import { WishlistProvider } from "@/context/WishlistContext";
 import Link from "next/link";
-import { User } from "lucide-react";
+import { User, Heart } from "lucide-react";
 import CartIcon from "@/components/CartIcon";
 
 const inter = Inter({
@@ -32,7 +33,8 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${outfit.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-background text-foreground font-sans">
         <CartProvider>
-          <header className="w-full bg-white">
+          <WishlistProvider>
+            <header className="w-full bg-white">
             <div className="max-w-[1400px] mx-auto px-6 h-24 flex items-center justify-between">
               <Link href="/" className="text-3xl font-black font-sans tracking-tight text-black uppercase">
                 Sneha Furnitures
@@ -45,6 +47,9 @@ export default function RootLayout({
                   <Link href="/contact" className="hover:opacity-70 transition">Contact</Link>
                 </nav>
                 <div className="flex items-center gap-6 text-black">
+                  <Link href="/wishlist" className="text-sm font-bold uppercase tracking-wider hover:opacity-70 transition flex items-center gap-2">
+                    <Heart size={18} />
+                  </Link>
                   <Link href="/profile" className="text-sm font-bold uppercase tracking-wider hover:opacity-70 transition flex items-center gap-2">
                     <User size={18} />
                   </Link>
@@ -86,6 +91,7 @@ export default function RootLayout({
           </footer>
 
           <WhatsAppWidget />
+          </WishlistProvider>
         </CartProvider>
         <Analytics />
       </body>

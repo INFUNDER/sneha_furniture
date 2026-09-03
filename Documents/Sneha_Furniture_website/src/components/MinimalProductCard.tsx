@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import { useRouter } from 'next/navigation';
 import { Star, StarHalf } from 'lucide-react';
+import WishlistButton from './WishlistButton';
 
 export default function MinimalProductCard({ product }: { product: any }) {
   const { addToCart } = useCart();
@@ -45,7 +46,8 @@ export default function MinimalProductCard({ product }: { product: any }) {
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col relative">
+      <WishlistButton productId={product.id} />
       <Link href={`/products/${product.id}`} className="group block mb-4">
         <div className="aspect-[4/5] bg-[#F5F5F5] overflow-hidden">
           <img 

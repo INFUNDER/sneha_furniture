@@ -21,6 +21,7 @@ model User {
   updatedAt DateTime @updatedAt
   orders    Order[]
   reviews   Review[]
+  wishlistItems WishlistItem[]
 }
 
 model Product {
@@ -42,6 +43,7 @@ model Product {
   updatedAt       DateTime @updatedAt
   orderItems      OrderItem[]
   reviews         Review[]
+  wishlistItems   WishlistItem[]
 }
 
 model Order {
@@ -79,4 +81,15 @@ model Review {
   comment   String?
   status    String   @default("APPROVED") // PENDING, APPROVED, REJECTED
   createdAt DateTime @default(now())
+}
+
+model WishlistItem {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
 }
