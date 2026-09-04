@@ -77,7 +77,7 @@ export default async function ProductDetailsPage({ params }: { params: Promise<{
             )}
           </div>
 
-          <p className="text-xl leading-relaxed text-black mb-12">
+          <p className="text-xl leading-relaxed text-black mb-12 whitespace-pre-wrap">
             {product.description}
           </p>
 
@@ -87,24 +87,58 @@ export default async function ProductDetailsPage({ params }: { params: Promise<{
           <div className="mt-16 border-t border-black pt-12">
             <h3 className="text-2xl font-black uppercase tracking-widest mb-8">Specifications</h3>
             <div className="flex flex-col gap-6">
-              <div className="flex justify-between border-b border-gray-200 pb-4">
-                <span className="font-bold uppercase tracking-widest text-sm opacity-50">Primary Material</span>
-                <span className="font-bold text-black uppercase">{product.primaryMaterial || 'N/A'}</span>
-              </div>
-              <div className="flex justify-between border-b border-gray-200 pb-4">
-                <span className="font-bold uppercase tracking-widest text-sm opacity-50">Dimensions</span>
-                <span className="font-bold text-black uppercase">{product.dimensions || 'N/A'}</span>
-              </div>
-              <div className="flex justify-between border-b border-gray-200 pb-4">
-                <span className="font-bold uppercase tracking-widest text-sm opacity-50">Finish</span>
-                <span className="font-bold text-black uppercase">{product.finish || 'N/A'}</span>
-              </div>
-              <div className="flex justify-between border-b border-gray-200 pb-4">
-                <span className="font-bold uppercase tracking-widest text-sm opacity-50">Warranty</span>
-                <span className="font-bold text-black uppercase">{product.warranty || '1 YEAR STANDARD'}</span>
-              </div>
+              {product.primaryMaterial && (
+                <div className="flex justify-between border-b border-gray-200 pb-4">
+                  <span className="font-bold uppercase tracking-widest text-sm opacity-50">Primary Material</span>
+                  <span className="font-bold text-black uppercase">{product.primaryMaterial}</span>
+                </div>
+              )}
+              {product.dimensions && (
+                <div className="flex justify-between border-b border-gray-200 pb-4">
+                  <span className="font-bold uppercase tracking-widest text-sm opacity-50">Dimensions</span>
+                  <span className="font-bold text-black uppercase">{product.dimensions}</span>
+                </div>
+              )}
+              {product.finish && (
+                <div className="flex justify-between border-b border-gray-200 pb-4">
+                  <span className="font-bold uppercase tracking-widest text-sm opacity-50">Finish</span>
+                  <span className="font-bold text-black uppercase">{product.finish}</span>
+                </div>
+              )}
+              {product.warranty && (
+                <div className="flex justify-between border-b border-gray-200 pb-4">
+                  <span className="font-bold uppercase tracking-widest text-sm opacity-50">Warranty</span>
+                  <span className="font-bold text-black uppercase">{product.warranty}</span>
+                </div>
+              )}
+              {product.additionalSpecs && Object.entries(JSON.parse(product.additionalSpecs)).map(([key, val]) => (
+                <div key={key} className="flex justify-between border-b border-gray-200 pb-4">
+                  <span className="font-bold uppercase tracking-widest text-sm opacity-50">{key}</span>
+                  <span className="font-bold text-black uppercase">{String(val)}</span>
+                </div>
+              ))}
             </div>
           </div>
+
+          {/* Care & Maintenance */}
+          {product.careInstructions && (
+            <div className="mt-16 border-t border-black pt-12">
+              <h3 className="text-2xl font-black uppercase tracking-widest mb-8">Care & Maintenance</h3>
+              <div className="text-sm font-medium leading-relaxed opacity-70 whitespace-pre-wrap">
+                {product.careInstructions}
+              </div>
+            </div>
+          )}
+
+          {/* Returns & Warranty Policy */}
+          {product.returnsPolicy && (
+            <div className="mt-16 border-t border-black pt-12">
+              <h3 className="text-2xl font-black uppercase tracking-widest mb-8">Returns & Policy</h3>
+              <div className="text-sm font-medium leading-relaxed opacity-70 whitespace-pre-wrap">
+                {product.returnsPolicy}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

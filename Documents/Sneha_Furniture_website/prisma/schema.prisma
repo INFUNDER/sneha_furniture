@@ -39,6 +39,9 @@ model Product {
   images          String   // JSON stringified array of URLs
   ratings         Float    @default(0.0)
   reviewsCount    Int      @default(0)
+  careInstructions String?
+  returnsPolicy   String?
+  additionalSpecs String?  // JSON stringified object
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   orderItems      OrderItem[]
