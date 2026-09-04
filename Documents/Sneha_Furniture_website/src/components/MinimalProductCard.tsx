@@ -10,8 +10,9 @@ export default function MinimalProductCard({ product }: { product: any }) {
   const { addToCart } = useCart();
   const router = useRouter();
   
-  const images = JSON.parse(product.images || '[]');
-  const coverImage = images[0] || 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=800&q=80';
+  const parsedImages = JSON.parse(product.images || '[]');
+  const images = parsedImages.length > 0 ? parsedImages : ['https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=800&q=80'];
+  const coverImage = images[0];
 
   const handleAddToCart = () => {
     addToCart({
@@ -48,12 +49,12 @@ export default function MinimalProductCard({ product }: { product: any }) {
   return (
     <div className="flex flex-col relative">
       <WishlistButton productId={product.id} />
-      <div className="relative group mb-4 bg-[#F5F5F5] overflow-hidden">
+      <div className="relative group mb-4 bg-[#F5F5F5] overflow-hidden rounded-lg">
         {/* Horizontal scroll snap gallery */}
         <div className="w-full flex overflow-x-auto snap-x snap-mandatory hide-scrollbar" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           {images.map((img: string, idx: number) => (
-            <Link key={idx} href={`/products/${product.id}`} className="min-w-full flex-shrink-0 snap-center">
-              <div className="aspect-[4/5] w-full flex items-center justify-center p-4">
+            <Link key={idx} href={`/products/${product.id}`} className="min-w-full flex-shrink-0 snap-center block">
+              <div className="aspect-[4/3] w-full flex items-center justify-center p-6">
                 <img 
                   src={img} 
                   alt={`${product.title} - ${idx + 1}`} 
@@ -66,7 +67,7 @@ export default function MinimalProductCard({ product }: { product: any }) {
         
         {/* Pagination Dots (purely visual for swipe cue) */}
         {images.length > 1 && (
-          <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-1.5 pointer-events-none">
+          <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 pointer-events-none">
             {images.map((_: any, idx: number) => (
               <div key={idx} className="w-1.5 h-1.5 rounded-full bg-black/20" />
             ))}
