@@ -54,7 +54,7 @@ export default function MinimalProductCard({ product }: { product: any }) {
         <div className="w-full flex overflow-x-auto snap-x snap-mandatory hide-scrollbar" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           {images.map((img: string, idx: number) => (
             <Link key={idx} href={`/products/${product.id}`} className="min-w-full flex-shrink-0 snap-center block">
-              <div className="aspect-[4/3] w-full flex items-center justify-center p-6">
+              <div className="aspect-square w-full flex items-center justify-center p-2">
                 <img 
                   src={img} 
                   alt={`${product.title} - ${idx + 1}`} 
