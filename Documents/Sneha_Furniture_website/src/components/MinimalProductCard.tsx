@@ -48,15 +48,31 @@ export default function MinimalProductCard({ product }: { product: any }) {
   return (
     <div className="flex flex-col relative">
       <WishlistButton productId={product.id} />
-      <Link href={`/products/${product.id}`} className="group block mb-4">
-        <div className="aspect-[4/5] bg-[#F5F5F5] overflow-hidden">
-          <img 
-            src={coverImage} 
-            alt={product.title} 
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-          />
+      <div className="relative group mb-4 bg-[#F5F5F5] overflow-hidden">
+        {/* Horizontal scroll snap gallery */}
+        <div className="w-full flex overflow-x-auto snap-x snap-mandatory hide-scrollbar" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          {images.map((img: string, idx: number) => (
+            <Link key={idx} href={`/products/${product.id}`} className="min-w-full flex-shrink-0 snap-center">
+              <div className="aspect-[4/5] w-full flex items-center justify-center p-4">
+                <img 
+                  src={img} 
+                  alt={`${product.title} - ${idx + 1}`} 
+                  className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-700"
+                />
+              </div>
+            </Link>
+          ))}
         </div>
-      </Link>
+        
+        {/* Pagination Dots (purely visual for swipe cue) */}
+        {images.length > 1 && (
+          <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-1.5 pointer-events-none">
+            {images.map((_: any, idx: number) => (
+              <div key={idx} className="w-1.5 h-1.5 rounded-full bg-black/20" />
+            ))}
+          </div>
+        )}
+      </div>
       
       <div className="space-y-4">
         <div>
