@@ -57,56 +57,24 @@ export default function ShopUI({
   }, [initialProducts, selectedCategory, searchQuery, sortBy]);
 
   return (
-    <div className="flex flex-col md:flex-row gap-16 py-12 px-6 max-w-[1400px] mx-auto bg-white min-h-screen">
-      {/* Sidebar Filters */}
-      <aside className="w-full md:w-64 flex-shrink-0 space-y-12">
-        
+    <div className="flex flex-col py-12 px-6 max-w-[1400px] mx-auto bg-white min-h-screen">
+      
+      {/* Top Bar: Search & Sort */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-black pb-6 mb-8">
         {/* Search */}
-        <div>
-          <h2 className="text-xl font-black uppercase tracking-widest mb-6 border-b border-black pb-4">Search</h2>
+        <div className="w-full md:w-1/3">
           <input 
             type="text" 
-            placeholder="SEARCH..." 
+            placeholder="SEARCH PRODUCTS..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full border border-black rounded-none px-4 py-3 outline-none text-sm font-bold uppercase placeholder-gray-400 bg-transparent"
+            className="w-full border-none px-0 py-2 outline-none text-sm font-bold uppercase placeholder-gray-400 bg-transparent"
           />
         </div>
-
-        {/* Categories */}
-        <div>
-          <h2 className="text-xl font-black uppercase tracking-widest mb-6 border-b border-black pb-4">Categories</h2>
-          <ul className="space-y-4 text-sm font-bold uppercase tracking-wider">
-            <li>
-              <button 
-                onClick={() => setSelectedCategory('All')} 
-                className={`block w-full text-left transition-opacity ${selectedCategory === 'All' ? 'opacity-100 underline underline-offset-4' : 'opacity-50 hover:opacity-100'}`}
-              >
-                All Furniture
-              </button>
-            </li>
-            {categories.map((c) => (
-              <li key={c.category}>
-                <button 
-                  onClick={() => setSelectedCategory(c.category)} 
-                  className={`block w-full text-left transition-opacity ${selectedCategory === c.category ? 'opacity-100 underline underline-offset-4' : 'opacity-50 hover:opacity-100'}`}
-                >
-                  {c.category}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </aside>
-
-      {/* Product Grid */}
-      <div className="flex-1">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-12 gap-6 border-b border-black pb-6">
-          <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tight">
-            {selectedCategory === 'All' ? 'All Furniture' : `${selectedCategory}`}
-            <span className="text-xl font-medium opacity-50 ml-4">({filteredAndSortedProducts.length})</span>
-          </h1>
-          
+        
+        {/* Sort */}
+        <div className="w-full md:w-auto flex items-center justify-between md:justify-end gap-4">
+          <span className="text-sm font-bold uppercase tracking-widest opacity-50">Sort By</span>
           <select 
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
@@ -117,6 +85,35 @@ export default function ShopUI({
             <option value="price_desc">PRICE: HIGH TO LOW</option>
           </select>
         </div>
+      </div>
+
+      {/* Categories Row */}
+      <div className="flex items-center gap-10 overflow-x-auto hide-scrollbar pb-8 mb-4 border-b border-black/10" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+        <button 
+          onClick={() => setSelectedCategory('All')} 
+          className={`text-sm font-bold uppercase tracking-wider whitespace-nowrap transition-all ${selectedCategory === 'All' ? 'opacity-100 underline underline-offset-8' : 'opacity-50 hover:opacity-100'}`}
+        >
+          All Furniture
+        </button>
+        {categories.map((c) => (
+          <button 
+            key={c.category}
+            onClick={() => setSelectedCategory(c.category)} 
+            className={`text-sm font-bold uppercase tracking-wider whitespace-nowrap transition-all ${selectedCategory === c.category ? 'opacity-100 underline underline-offset-8' : 'opacity-50 hover:opacity-100'}`}
+          >
+            {c.category}
+          </button>
+        ))}
+      </div>
+
+      {/* Product Grid */}
+      <div className="flex-1">
+        <div className="mb-10">
+          <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tight">
+            {selectedCategory === 'All' ? 'All Furniture' : `${selectedCategory}`}
+            <span className="text-xl font-medium opacity-50 ml-4">({filteredAndSortedProducts.length} Products)</span>
+          </h1>
+        </div>
 
         {filteredAndSortedProducts.length === 0 ? (
           <div className="py-32 text-center">
@@ -126,7 +123,7 @@ export default function ShopUI({
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-16">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-16">
             {filteredAndSortedProducts.map((product) => (
               <MinimalProductCard key={product.id} product={product} />
             ))}

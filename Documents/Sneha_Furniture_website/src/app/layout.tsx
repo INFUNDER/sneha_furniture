@@ -8,6 +8,7 @@ import { WishlistProvider } from "@/context/WishlistContext";
 import Link from "next/link";
 import { User, Heart } from "lucide-react";
 import CartIcon from "@/components/CartIcon";
+import MarqueeBanner from "@/components/MarqueeBanner";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -34,7 +35,8 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-background text-foreground font-sans">
         <CartProvider>
           <WishlistProvider>
-            <header className="w-full bg-white">
+            <MarqueeBanner />
+            <header className="w-full bg-[#F5F5F5]">
             <div className="max-w-[1400px] mx-auto px-6 h-24 flex items-center justify-between">
               <Link href="/" className="text-3xl font-black font-sans tracking-tight text-black uppercase">
                 Sneha Furnitures
@@ -66,27 +68,46 @@ export default function RootLayout({
           </main>
           
           {/* Footer */}
-          <footer className="bg-white text-black py-16 px-6 max-w-[1400px] mx-auto w-full flex flex-col gap-8">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-8 w-full">
-              <div className="flex flex-col">
-                <h2 className="text-4xl md:text-5xl font-black font-sans uppercase tracking-tight">SNEHA FURNITURE</h2>
-                <p className="mt-4 text-xs font-bold uppercase tracking-widest opacity-50 text-left">
-                  &copy; {new Date().getFullYear()} SNEHA FURNITURE
+          <footer className="bg-[#F5F5F5] text-black pt-24 pb-12 w-full mt-auto">
+            <div className="max-w-[1400px] mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12 mb-16">
+              {/* Brand Column */}
+              <div className="flex flex-col gap-6 md:col-span-1">
+                <h2 className="text-3xl font-black font-sans uppercase tracking-tight">SNEHA FURNITURES</h2>
+                <p className="text-sm font-medium opacity-70 leading-relaxed">
+                  Premium quality living room, bedroom, and dining furniture in Dehradun. Handcrafted luxury for your home.
                 </p>
               </div>
-              <a href="mailto:ronitmittal0@gmail.com" className="text-4xl md:text-5xl font-black font-sans uppercase tracking-tight hover:opacity-70 transition break-all text-center md:text-right">
-                RONITMITTAL0@GMAIL.COM
-              </a>
+
+              {/* Quick Links */}
+              <div className="flex flex-col gap-4">
+                <h3 className="text-sm font-bold uppercase tracking-widest mb-2">Shop</h3>
+                <Link href="/shop" className="text-sm font-medium opacity-70 hover:opacity-100 transition">All Furniture</Link>
+                <Link href="/services" className="text-sm font-medium opacity-70 hover:opacity-100 transition">Our Services</Link>
+                <Link href="/about" className="text-sm font-medium opacity-70 hover:opacity-100 transition">About Us</Link>
+              </div>
+
+              {/* Customer Care */}
+              <div className="flex flex-col gap-4">
+                <h3 className="text-sm font-bold uppercase tracking-widest mb-2">Support</h3>
+                <Link href="/contact" className="text-sm font-medium opacity-70 hover:opacity-100 transition">Contact Us</Link>
+                <a href="mailto:ronitmittal0@gmail.com" className="text-sm font-medium opacity-70 hover:opacity-100 transition break-all">ronitmittal0@gmail.com</a>
+                <a href="tel:+919634312102" className="text-sm font-medium opacity-70 hover:opacity-100 transition">+91 96343 12102</a>
+              </div>
+
+              {/* Legal */}
+              <div className="flex flex-col gap-4">
+                <h3 className="text-sm font-bold uppercase tracking-widest mb-2">Policies</h3>
+                <Link href="/privacy" className="text-sm font-medium opacity-70 hover:opacity-100 transition">Privacy Policy</Link>
+                <Link href="/terms" className="text-sm font-medium opacity-70 hover:opacity-100 transition">Terms & Conditions</Link>
+                <Link href="/refund" className="text-sm font-medium opacity-70 hover:opacity-100 transition">Refund Policy</Link>
+                <Link href="/shipping" className="text-sm font-medium opacity-70 hover:opacity-100 transition">Shipping Policy</Link>
+              </div>
             </div>
             
-            <div className="flex flex-wrap gap-4 text-xs font-bold uppercase tracking-widest opacity-50 justify-center md:justify-start mt-8 border-t border-black/10 pt-8">
-              <a href="/privacy" className="hover:opacity-100 transition">Privacy Policy</a>
-              <span className="hidden md:inline">|</span>
-              <a href="/terms" className="hover:opacity-100 transition">Terms & Conditions</a>
-              <span className="hidden md:inline">|</span>
-              <a href="/refund" className="hover:opacity-100 transition">Refund Policy</a>
-              <span className="hidden md:inline">|</span>
-              <a href="/shipping" className="hover:opacity-100 transition">Shipping Policy</a>
+            <div className="max-w-[1400px] mx-auto px-6 pt-8 border-t border-black/10 flex flex-col md:flex-row justify-between items-center gap-4">
+              <p className="text-xs font-bold uppercase tracking-widest opacity-40">
+                &copy; {new Date().getFullYear()} SNEHA FURNITURES. ALL RIGHTS RESERVED.
+              </p>
             </div>
           </footer>
 
