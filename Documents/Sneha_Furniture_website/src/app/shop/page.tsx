@@ -1,8 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import ShopUI from './ShopUI';
 
-// Revalidate every hour, or rely on router.refresh() from admin mutations
-export const revalidate = 3600; 
+export const dynamic = 'force-dynamic';
 
 export default async function ShopPage({ searchParams }: { searchParams: Promise<{ category?: string }> }) {
   const resolvedParams = await searchParams;
