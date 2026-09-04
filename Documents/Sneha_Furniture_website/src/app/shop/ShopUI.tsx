@@ -57,10 +57,10 @@ export default function ShopUI({
   }, [initialProducts, selectedCategory, searchQuery, sortBy]);
 
   return (
-    <div className="flex flex-col py-12 px-6 max-w-[1400px] mx-auto bg-white min-h-screen">
+    <div className="flex flex-col py-6 md:py-12 px-4 md:px-6 max-w-[1400px] mx-auto bg-white min-h-screen pb-20 md:pb-12">
       
       {/* Top Bar: Search & Sort */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-black pb-6 mb-8">
+      <div className="hidden md:flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-black pb-6 mb-8">
         {/* Search */}
         <div className="w-full md:w-1/3">
           <input 
@@ -108,11 +108,11 @@ export default function ShopUI({
 
       {/* Product Grid */}
       <div className="flex-1">
-        <div className="mb-10">
-          <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tight">
+        <div className="mb-6 md:mb-10 flex flex-col gap-2">
+          <h1 className="text-3xl md:text-5xl font-black uppercase tracking-tight">
             {selectedCategory === 'All' ? 'All Furniture' : `${selectedCategory}`}
-            <span className="text-xl font-medium opacity-50 ml-4">({filteredAndSortedProducts.length} Products)</span>
           </h1>
+          <span className="text-sm font-medium opacity-50">{filteredAndSortedProducts.length} Products</span>
         </div>
 
         {filteredAndSortedProducts.length === 0 ? (
@@ -123,12 +123,54 @@ export default function ShopUI({
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-16">
+          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-3 gap-y-10 sm:gap-x-6 sm:gap-y-16">
             {filteredAndSortedProducts.map((product) => (
               <MinimalProductCard key={product.id} product={product} />
             ))}
           </div>
         )}
+      </div>
+
+      {/* Mobile Sticky Bottom Toolbar */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 md:hidden flex justify-around items-center h-14 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+        
+        {/* Sort Select */}
+        <div className="flex flex-col items-center justify-center flex-1 h-full border-r border-gray-200 relative">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-0.5">Sort By</span>
+          <select 
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+          >
+            <option value="newest">Newest</option>
+            <option value="price_asc">Price Low</option>
+            <option value="price_desc">Price High</option>
+          </select>
+          <span className="text-xs font-bold uppercase">{sortBy === 'newest' ? 'Newest' : sortBy === 'price_asc' ? 'Price Low' : 'Price High'}</span>
+        </div>
+
+        {/* Category Select */}
+        <div className="flex flex-col items-center justify-center flex-1 h-full border-r border-gray-200 relative">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-0.5">Category</span>
+          <select 
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+          >
+            <option value="All">All</option>
+            {categories.map((c) => (
+              <option key={c.category} value={c.category}>{c.category}</option>
+            ))}
+          </select>
+          <span className="text-xs font-bold uppercase line-clamp-1 px-2 text-center w-full">{selectedCategory}</span>
+        </div>
+
+        {/* Search Toggle */}
+        <div className="flex flex-col items-center justify-center flex-1 h-full cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-0.5">Search</span>
+          <span className="text-xs font-bold uppercase">Find</span>
+        </div>
+
       </div>
     </div>
   );
