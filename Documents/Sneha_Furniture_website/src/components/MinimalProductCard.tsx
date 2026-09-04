@@ -51,10 +51,23 @@ export default function MinimalProductCard({ product }: { product: any }) {
       <WishlistButton productId={product.id} />
       <div className="relative group mb-4 bg-[#F5F5F5] overflow-hidden rounded-lg">
         {/* Horizontal scroll snap gallery */}
-        <div className="w-full flex overflow-x-auto snap-x snap-mandatory hide-scrollbar" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+        <div 
+          className="w-full flex overflow-x-auto hide-scrollbar" 
+          style={{ 
+            scrollbarWidth: 'none', 
+            msOverflowStyle: 'none',
+            scrollSnapType: 'x mandatory',
+            WebkitOverflowScrolling: 'touch'
+          }}
+        >
           {images.map((img: string, idx: number) => (
-            <Link key={idx} href={`/products/${product.id}`} className="min-w-full flex-shrink-0 snap-center block">
-              <div className="aspect-square w-full flex items-center justify-center p-2">
+            <Link 
+              key={idx} 
+              href={`/products/${product.id}`} 
+              className="min-w-full flex-shrink-0 block relative"
+              style={{ scrollSnapAlign: 'center' }}
+            >
+              <div className="w-full flex items-center justify-center p-4" style={{ aspectRatio: '1 / 1' }}>
                 <img 
                   src={img} 
                   alt={`${product.title} - ${idx + 1}`} 
