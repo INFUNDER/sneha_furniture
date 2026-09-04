@@ -5,6 +5,8 @@ import Link from 'next/link';
 import MinimalProductCard from '@/components/MinimalProductCard';
 import ReviewSection from '@/components/ReviewSection';
 import { getSession } from '@/lib/auth';
+import ProductImageGallery from '@/components/ProductImageGallery';
+import ProductAccordion from '@/components/ProductAccordion';
 
 export default async function ProductDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
@@ -37,23 +39,75 @@ export default async function ProductDetailsPage({ params }: { params: Promise<{
   const isLoggedIn = !!session;
 
   const images = JSON.parse(product.images || '[]');
-  const coverImage = images[0] || 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=800&q=80';
+
+  // Generate specs
+  let specsList: { key: string; val: string }[] = [];
+  if (product.primaryMaterial) specsList.push({ key: 'Primary Material', val: product.primaryMaterial });
+  if (product.dimensions) specsList.push({ key: 'Dimensions', val: product.dimensions });
+  if (product.finish) specsList.push({ key: 'Finish', val: product.finish });
+  if (product.warranty) specsList.push({ key: 'Warranty', val: product.warranty });
+  if (product.additionalSpecs) {
+    Object.entries(JSON.parse(product.additionalSpecs)).forEach(([key, val]) => {
+      specsList.push({ key, val: String(val) });
+    });
+  }
+
+  const accordionItems = [
+    {
+      title: 'Product Details',
+      defaultOpen: true,
+      content: (
+        <p className="text-sm font-medium leading-relaxed opacity-70 whitespace-pre-wrap">
+          {product.description}
+        </p>
+      )
+    },
+    {
+      title: 'Specifications',
+      defaultOpen: true,
+      content: (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+          {specsList.map((spec, i) => (
+            <div key={i} className="flex justify-between border-b border-gray-200 pb-2">
+              <span className="font-bold uppercase tracking-widest text-xs opacity-50 pr-4">{spec.key}</span>
+              <span className="font-bold text-black uppercase text-xs text-right">{spec.val}</span>
+            </div>
+          ))}
+        </div>
+      )
+    }
+  ];
+
+  if (product.careInstructions) {
+    accordionItems.push({
+      title: 'Care & Maintenance',
+      defaultOpen: false,
+      content: (
+        <p className="text-sm font-medium leading-relaxed opacity-70 whitespace-pre-wrap">
+          {product.careInstructions}
+        </p>
+      )
+    });
+  }
+
+  if (product.returnsPolicy) {
+    accordionItems.push({
+      title: 'Returns & Policy',
+      defaultOpen: false,
+      content: (
+        <p className="text-sm font-medium leading-relaxed opacity-70 whitespace-pre-wrap">
+          {product.returnsPolicy}
+        </p>
+      )
+    });
+  }
 
   return (
-    <div className="max-w-[1400px] mx-auto px-6 py-24 bg-white min-h-screen">
-      <div className="flex flex-col lg:flex-row gap-16 lg:gap-24">
+    <div className="max-w-[1400px] mx-auto px-6 py-12 md:py-24 bg-white min-h-screen">
+      <div className="flex flex-col lg:flex-row gap-12 lg:gap-24">
         {/* Images */}
-        <div className="w-full lg:w-1/2 flex flex-col gap-6">
-          <div className="bg-[#F5F5F5] aspect-[4/5] w-full overflow-hidden">
-            <img src={coverImage} alt={product.title} className="w-full h-full object-cover" />
-          </div>
-          <div className="grid grid-cols-3 gap-6">
-            {images.slice(0, 3).map((img: string, idx: number) => (
-              <div key={idx} className="aspect-square bg-[#F5F5F5] overflow-hidden cursor-pointer opacity-50 hover:opacity-100 transition">
-                <img src={img} alt={`Thumbnail ${idx}`} className="w-full h-full object-cover" />
-              </div>
-            ))}
-          </div>
+        <div className="w-full lg:w-1/2">
+          <ProductImageGallery images={images} title={product.title} />
         </div>
 
         {/* Details */}
@@ -77,68 +131,11 @@ export default async function ProductDetailsPage({ params }: { params: Promise<{
             )}
           </div>
 
-          <p className="text-xl leading-relaxed text-black mb-12 whitespace-pre-wrap">
-            {product.description}
-          </p>
+          <AddToCartSection product={product} coverImage={images[0] || ''} />
 
-          <AddToCartSection product={product} coverImage={coverImage} />
-
-          {/* Specifications */}
-          <div className="mt-16 border-t border-black pt-12">
-            <h3 className="text-2xl font-black uppercase tracking-widest mb-8">Specifications</h3>
-            <div className="flex flex-col gap-6">
-              {product.primaryMaterial && (
-                <div className="flex justify-between border-b border-gray-200 pb-4">
-                  <span className="font-bold uppercase tracking-widest text-sm opacity-50">Primary Material</span>
-                  <span className="font-bold text-black uppercase">{product.primaryMaterial}</span>
-                </div>
-              )}
-              {product.dimensions && (
-                <div className="flex justify-between border-b border-gray-200 pb-4">
-                  <span className="font-bold uppercase tracking-widest text-sm opacity-50">Dimensions</span>
-                  <span className="font-bold text-black uppercase">{product.dimensions}</span>
-                </div>
-              )}
-              {product.finish && (
-                <div className="flex justify-between border-b border-gray-200 pb-4">
-                  <span className="font-bold uppercase tracking-widest text-sm opacity-50">Finish</span>
-                  <span className="font-bold text-black uppercase">{product.finish}</span>
-                </div>
-              )}
-              {product.warranty && (
-                <div className="flex justify-between border-b border-gray-200 pb-4">
-                  <span className="font-bold uppercase tracking-widest text-sm opacity-50">Warranty</span>
-                  <span className="font-bold text-black uppercase">{product.warranty}</span>
-                </div>
-              )}
-              {product.additionalSpecs && Object.entries(JSON.parse(product.additionalSpecs)).map(([key, val]) => (
-                <div key={key} className="flex justify-between border-b border-gray-200 pb-4">
-                  <span className="font-bold uppercase tracking-widest text-sm opacity-50">{key}</span>
-                  <span className="font-bold text-black uppercase">{String(val)}</span>
-                </div>
-              ))}
-            </div>
+          <div className="mt-12">
+            <ProductAccordion items={accordionItems} />
           </div>
-
-          {/* Care & Maintenance */}
-          {product.careInstructions && (
-            <div className="mt-16 border-t border-black pt-12">
-              <h3 className="text-2xl font-black uppercase tracking-widest mb-8">Care & Maintenance</h3>
-              <div className="text-sm font-medium leading-relaxed opacity-70 whitespace-pre-wrap">
-                {product.careInstructions}
-              </div>
-            </div>
-          )}
-
-          {/* Returns & Warranty Policy */}
-          {product.returnsPolicy && (
-            <div className="mt-16 border-t border-black pt-12">
-              <h3 className="text-2xl font-black uppercase tracking-widest mb-8">Returns & Policy</h3>
-              <div className="text-sm font-medium leading-relaxed opacity-70 whitespace-pre-wrap">
-                {product.returnsPolicy}
-              </div>
-            </div>
-          )}
         </div>
       </div>
 
