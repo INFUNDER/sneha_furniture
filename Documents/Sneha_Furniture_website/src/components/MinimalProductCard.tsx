@@ -64,16 +64,14 @@ export default function MinimalProductCard({ product }: { product: any }) {
             <Link 
               key={idx} 
               href={`/products/${product.id}`} 
-              className="min-w-full flex-shrink-0 block relative"
+              className="min-w-full flex-shrink-0 block relative pt-[100%]"
               style={{ scrollSnapAlign: 'center' }}
             >
-              <div className="w-full flex items-center justify-center p-4" style={{ aspectRatio: '1 / 1' }}>
-                <img 
-                  src={img} 
-                  alt={`${product.title} - ${idx + 1}`} 
-                  className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-700"
-                />
-              </div>
+              <img 
+                src={img} 
+                alt={`${product.title} - ${idx + 1}`} 
+                className="absolute inset-0 w-full h-full object-contain p-4 mix-blend-multiply group-hover:scale-105 transition-transform duration-700"
+              />
             </Link>
           ))}
         </div>
