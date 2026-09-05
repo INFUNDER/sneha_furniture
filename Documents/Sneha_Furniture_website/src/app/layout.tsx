@@ -38,8 +38,8 @@ export default function RootLayout({
             <MarqueeBanner />
             <header className="w-full bg-[#F5F5F5]">
             <div className="max-w-[1400px] mx-auto px-6 h-24 flex items-center justify-between">
-              <Link href="/" className="text-3xl font-black font-sans tracking-tight text-black uppercase">
-                Sneha Furnitures
+              <Link href="/" className="flex items-center">
+                <img src="/logo.png" alt="Sneha Furnitures Logo" className="h-12 w-auto object-contain" />
               </Link>
               <div className="flex items-center gap-8">
                 <nav className="hidden md:flex items-center gap-8 text-sm font-bold uppercase tracking-wider text-black">
@@ -72,7 +72,7 @@ export default function RootLayout({
             <div className="max-w-[1400px] mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12 mb-16">
               {/* Brand Column */}
               <div className="flex flex-col gap-6 md:col-span-1">
-                <h2 className="text-3xl font-black font-sans uppercase tracking-tight">SNEHA FURNITURES</h2>
+                <img src="/logo.png" alt="Sneha Furnitures Logo" className="h-16 w-auto object-contain self-start" />
                 <p className="text-sm font-medium opacity-70 leading-relaxed">
                   Premium quality living room, bedroom, and dining furniture in Dehradun. Handcrafted luxury for your home.
                 </p>
