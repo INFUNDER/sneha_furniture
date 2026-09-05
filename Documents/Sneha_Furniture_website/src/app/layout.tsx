@@ -44,6 +44,30 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-background text-foreground font-sans overflow-x-hidden">
         <CartProvider>
           <WishlistProvider>
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{
+                __html: JSON.stringify({
+                  "@context": "https://schema.org",
+                  "@type": "FurnitureStore",
+                  "name": "Sneha Furniture",
+                  "url": "https://www.snehafurniture.in/",
+                  "logo": "https://www.snehafurniture.in/logo.png",
+                  "telephone": "+918755594915",
+                  "email": "snehafurnituresddn@gmail.com",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Dehradun",
+                    "addressRegion": "Uttarakhand",
+                    "addressCountry": "IN"
+                  },
+                  "sameAs": [
+                    "https://www.facebook.com/share/1Hd1tiWFCt/?mibextid=wwXIfr",
+                    "https://www.instagram.com/snehafurniture.in?stkn=MTdkaGJzdGVydHRzag%3D%3D&utm_source=qr"
+                  ]
+                })
+              }}
+            />
             <MarqueeBanner />
             <header className="w-full bg-[#F5F5F5]">
             <div className="max-w-[1400px] mx-auto px-6 h-24 flex items-center justify-between">
