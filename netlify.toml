@@ -1,0 +1,6 @@
+[build]
+  base = "Documents/Sneha_Furniture_website"
+  command = "npm run build"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
