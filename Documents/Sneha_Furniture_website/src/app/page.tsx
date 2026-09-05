@@ -75,36 +75,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Follow Our Design Journey Section */}
-      <section className="py-32 bg-white px-6 max-w-[1400px] mx-auto w-full flex flex-col items-center border-t border-black">
-        <h2 className="text-4xl md:text-5xl font-black font-sans uppercase tracking-tight text-black leading-none mb-16 text-center">
-          FOLLOW OUR DESIGN JOURNEY
-        </h2>
-        
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 w-full mb-16">
-          <div className="aspect-square bg-gray-100 overflow-hidden relative">
-             <img src="/sofa-pic.jpg" alt="Journey 1" className="absolute inset-0 w-full h-full object-cover" />
-          </div>
-          <div className="aspect-square bg-gray-100 overflow-hidden relative">
-             <img src="/hero-pic.jpg" alt="Journey 2" className="absolute inset-0 w-full h-full object-cover" />
-          </div>
-          <div className="aspect-square bg-gray-100 overflow-hidden relative">
-             <img src="/table.jpg" alt="Journey 3" className="absolute inset-0 w-full h-full object-cover" />
-          </div>
-          <div className="aspect-square bg-gray-100 overflow-hidden relative">
-             <img src="/chair.jpg" alt="Journey 4" className="absolute inset-0 w-full h-full object-cover" />
-          </div>
-        </div>
 
-        <a 
-          href="https://instagram.com" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="inline-flex items-center justify-center bg-black text-white rounded-full px-12 py-5 text-sm font-bold tracking-widest uppercase hover:bg-black/80 transition"
-        >
-          VISIT PROFILE
-        </a>
-      </section>
     </div>
   );
 }

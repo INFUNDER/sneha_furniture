@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 
 export default function WhatsAppWidget() {
   const pathname = usePathname();
-  const phoneNumber = '919634312102'; // +91 96343 12102
+  const phoneNumber = '918755594915'; // +91 87555 94915
   
   let message = 'Hi Sneha Furniture, I would like to know more about your premium furniture collection.';
   

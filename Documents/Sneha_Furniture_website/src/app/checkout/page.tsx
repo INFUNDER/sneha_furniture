@@ -8,7 +8,7 @@ import Script from 'next/script';
 export default function CheckoutPage() {
   const { items, total, clearCart } = useCart();
   const router = useRouter();
-  const [paymentMethod, setPaymentMethod] = useState('ONLINE');
+  const [paymentMethod, setPaymentMethod] = useState('COD');
   const [loading, setLoading] = useState(false);
 
   const [address, setAddress] = useState({
@@ -127,9 +127,9 @@ export default function CheckoutPage() {
           <div>
             <h2 className="text-2xl font-black uppercase tracking-widest mb-8 border-b border-black pb-4">Payment Method</h2>
             <div className="space-y-4 font-bold uppercase tracking-widest text-sm">
-              <label className={`flex items-center gap-4 p-6 border transition cursor-pointer ${paymentMethod === 'ONLINE' ? 'border-black bg-black text-white' : 'border-gray-200 text-black hover:border-black'}`}>
+              <label className={`flex items-center gap-4 p-6 border transition ${paymentMethod === 'ONLINE' ? 'border-black bg-black text-white' : 'border-gray-200 text-black hover:border-black'}`}>
                 <input type="radio" name="payment" value="ONLINE" checked={paymentMethod === 'ONLINE'} onChange={() => setPaymentMethod('ONLINE')} className="sr-only" />
-                <span>Online Payment (Razorpay)</span>
+                <span>Online Payment (Razorpay) <span className="text-red-500 opacity-80 text-xs ml-2">(Coming Soon)</span></span>
               </label>
               <label className={`flex items-center gap-4 p-6 border transition cursor-pointer ${paymentMethod === 'COD' ? 'border-black bg-black text-white' : 'border-gray-200 text-black hover:border-black'}`}>
                 <input type="radio" name="payment" value="COD" checked={paymentMethod === 'COD'} onChange={() => setPaymentMethod('COD')} className="sr-only" />
@@ -159,8 +159,8 @@ export default function CheckoutPage() {
                <div className="flex justify-between font-black text-xl mt-4"><span>Total</span><span>₹{total.toLocaleString('en-IN')}</span></div>
             </div>
 
-            <button type="submit" disabled={loading} className="w-full mt-12 bg-black text-white h-14 rounded-full font-bold text-sm tracking-widest uppercase hover:bg-black/80 transition disabled:opacity-50 disabled:cursor-not-allowed">
-              {loading ? 'PROCESSING...' : 'PLACE ORDER'}
+            <button type="submit" disabled={loading || paymentMethod === 'ONLINE'} className="w-full mt-12 bg-black text-white h-14 rounded-full font-bold text-sm tracking-widest uppercase hover:bg-black/80 transition disabled:opacity-50 disabled:cursor-not-allowed">
+              {loading ? 'PROCESSING...' : paymentMethod === 'ONLINE' ? 'COMING SOON' : 'PLACE ORDER'}
             </button>
           </div>
         </div>

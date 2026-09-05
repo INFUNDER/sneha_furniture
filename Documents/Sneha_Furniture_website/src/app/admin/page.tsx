@@ -79,7 +79,7 @@ export default async function AdminDashboard() {
                           #{order.id.slice(-6)}
                         </Link>
                       </td>
-                      <td className="px-8 py-6">{order.user.name}</td>
+                      <td className="px-8 py-6">{order.user?.name || 'Guest'}</td>
                       <td className="px-8 py-6">₹{order.totalAmount.toLocaleString('en-IN')}</td>
                     </tr>
                   ))}
