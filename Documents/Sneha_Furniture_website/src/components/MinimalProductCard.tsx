@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import WishlistButton from './WishlistButton';
 
 export default function MinimalProductCard({ product }: { product: any }) {
@@ -46,10 +47,12 @@ export default function MinimalProductCard({ product }: { product: any }) {
               className="min-w-full flex-shrink-0 block relative pt-[100%]"
               style={{ scrollSnapAlign: 'center' }}
             >
-              <img 
+              <Image 
                 src={img} 
                 alt={`${product.title} - ${idx + 1}`} 
-                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-700"
+                unoptimized
               />
             </Link>
           ))}

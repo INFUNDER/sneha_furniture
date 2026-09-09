@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function AboutPage() {
   return (
@@ -11,10 +12,12 @@ export default function AboutPage() {
         <div className="flex flex-col lg:flex-row gap-24 items-start mb-32">
           <div className="w-full lg:w-1/2">
             <div className="aspect-[3/4] bg-gray-100 relative overflow-hidden">
-              <img 
+              <Image 
                 src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
                 alt="Our Heritage" 
-                className="absolute inset-0 w-full h-full object-cover" 
+                fill
+                className="object-cover" 
+                unoptimized
               />
             </div>
           </div>

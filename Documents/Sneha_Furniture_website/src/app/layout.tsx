@@ -1,14 +1,17 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Outfit } from "next/font/google";
-import { Analytics } from "@vercel/analytics/next";
+
 import "./globals.css";
 import WhatsAppWidget from "@/components/WhatsAppWidget";
 import { CartProvider } from "@/context/CartContext";
 import { WishlistProvider } from "@/context/WishlistContext";
 import Link from "next/link";
+import Image from "next/image";
 import { User, Heart } from "lucide-react";
 import CartIcon from "@/components/CartIcon";
 import MarqueeBanner from "@/components/MarqueeBanner";
+import CookieBanner from "@/components/CookieBanner";
+import MobileNav from "@/components/MobileNav";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -25,6 +28,21 @@ export const metadata: Metadata = {
   description: "Shop premium quality living room, bedroom, and dining furniture at Sneha Furniture, Dehradun. Handcrafted Teak & Sheesham wood pieces.",
   icons: {
     icon: '/icon.png',
+  },
+  openGraph: {
+    title: "Sneha Furniture | Luxury Furniture in Dehradun",
+    description: "Shop premium quality living room, bedroom, and dining furniture at Sneha Furniture, Dehradun. Handcrafted Teak & Sheesham wood pieces.",
+    url: "https://www.snehafurniture.in/",
+    siteName: "Sneha Furniture",
+    images: [
+      {
+        url: "https://www.snehafurniture.in/logo.png",
+        width: 800,
+        height: 600,
+      },
+    ],
+    locale: "en_IN",
+    type: "website",
   },
 };
 
@@ -71,9 +89,12 @@ export default function RootLayout({
             <MarqueeBanner />
             <header className="w-full bg-[#F5F5F5]">
             <div className="max-w-[1400px] mx-auto px-6 h-24 flex items-center justify-between">
-              <Link href="/" className="text-3xl font-black font-sans tracking-tight text-black uppercase">
-                Sneha Furnitures
-              </Link>
+              <div className="flex items-center gap-4">
+                <MobileNav />
+                <Link href="/" className="text-2xl md:text-3xl font-black font-sans tracking-tight text-black uppercase">
+                  Sneha Furnitures
+                </Link>
+              </div>
               <div className="flex items-center gap-8">
                 <nav className="hidden md:flex items-center gap-8 text-sm font-bold uppercase tracking-wider text-black">
                   <Link href="/shop" className="hover:opacity-70 transition">Shop</Link>
@@ -101,11 +122,11 @@ export default function RootLayout({
           </main>
           
           {/* Footer */}
-          <footer className="bg-[#F5F5F5] text-black pt-24 pb-12 w-full mt-auto">
-            <div className="max-w-[1400px] mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-12 mb-16">
+          <footer className="bg-[#FAFAFA] border-t border-gray-200 text-black pt-16 pb-8 w-full mt-auto">
+            <div className="max-w-[1400px] mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-12 mb-12">
               {/* Brand Column */}
               <div className="flex flex-col gap-6 md:col-span-1">
-                <img src="/logo.png" alt="Sneha Furnitures Logo" className="h-16 w-auto object-contain self-start" />
+                <Image src="/logo.png" alt="Sneha Furnitures Logo" width={160} height={64} className="h-16 w-auto object-contain self-start" />
                 <h2 className="text-3xl font-black font-sans uppercase tracking-tight">SNEHA FURNITURES</h2>
                 <p className="text-sm font-medium opacity-70 leading-relaxed">
                   Premium quality living room, bedroom, and dining furniture in Dehradun. Handcrafted luxury for your home.
@@ -153,9 +174,9 @@ export default function RootLayout({
           </footer>
 
           <WhatsAppWidget />
+          <CookieBanner />
           </WishlistProvider>
         </CartProvider>
-        <Analytics />
       </body>
     </html>
   );

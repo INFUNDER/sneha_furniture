@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -12,87 +9,87 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  name      String
-  email     String   @unique
-  password  String
-  role      String   @default("CUSTOMER") // CUSTOMER or ADMIN
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  orders    Order[]
-  reviews   Review[]
+  id            String         @id @default(cuid())
+  name          String
+  email         String         @unique
+  password      String
+  role          String         @default("CUSTOMER")
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  orders        Order[]
+  reviews       Review[]
   wishlistItems WishlistItem[]
 }
 
 model Product {
-  id              String   @id @default(cuid())
-  title           String
-  description     String
-  price           Float
-  discountPrice   Float?
-  category        String
-  primaryMaterial String?
-  dimensions      String?
-  finish          String?
-  warranty        String?
-  stock           Int      @default(0)
-  images          String   // JSON stringified array of URLs
-  ratings         Float    @default(0.0)
-  reviewsCount    Int      @default(0)
+  id               String         @id @default(cuid())
+  title            String
+  description      String
+  price            Float
+  discountPrice    Float?
+  category         String
+  primaryMaterial  String?
+  dimensions       String?
+  finish           String?
+  warranty         String?
+  stock            Int            @default(0)
+  images           String
+  ratings          Float          @default(0.0)
+  reviewsCount     Int            @default(0)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  additionalSpecs  String?
   careInstructions String?
-  returnsPolicy   String?
-  additionalSpecs String?  // JSON stringified object
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  orderItems      OrderItem[]
-  reviews         Review[]
-  wishlistItems   WishlistItem[]
+  returnsPolicy    String?
+  orderItems       OrderItem[]
+  reviews          Review[]
+  wishlistItems    WishlistItem[]
 }
 
 model Order {
   id              String      @id @default(cuid())
-  user            User        @relation(fields: [userId], references: [id])
   userId          String
   totalAmount     Float
-  paymentStatus   String      @default("PENDING") // PENDING, PAID, FAILED, COD
-  paymentMethod   String      // RAZORPAY, COD
-  shippingAddress String      // JSON stringified address object
-  orderStatus     String      @default("PROCESSING") // PROCESSING, PACKED, SHIPPED, DELIVERED, CANCELLED
+  paymentStatus   String      @default("PENDING")
+  paymentMethod   String
+  shippingAddress String
+  orderStatus     String      @default("PROCESSING")
   trackingNumber  String?
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
+  user            User        @relation(fields: [userId], references: [id])
   items           OrderItem[]
 }
 
 model OrderItem {
-  id        String   @id @default(cuid())
-  order     Order    @relation(fields: [orderId], references: [id])
+  id        String  @id @default(cuid())
   orderId   String
-  product   Product  @relation(fields: [productId], references: [id])
   productId String
   quantity  Int
   price     Float
+  order     Order   @relation(fields: [orderId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
 }
 
 model Review {
   id        String   @id @default(cuid())
-  user      User     @relation(fields: [userId], references: [id])
   userId    String
-  product   Product  @relation(fields: [productId], references: [id])
   productId String
   rating    Int
   comment   String?
-  status    String   @default("APPROVED") // PENDING, APPROVED, REJECTED
+  status    String   @default("APPROVED")
   createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model WishlistItem {
   id        String   @id @default(cuid())
-  user      User     @relation(fields: [userId], references: [id])
   userId    String
-  product   Product  @relation(fields: [productId], references: [id])
   productId String
   createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 
   @@unique([userId, productId])
 }

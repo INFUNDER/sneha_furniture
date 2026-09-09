@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import Image from 'next/image';
 
 export default function ProductImageGallery({ images, title }: { images: string[], title: string }) {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -44,11 +45,13 @@ export default function ProductImageGallery({ images, title }: { images: string[
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
         {images.map((img, idx) => (
-          <div key={idx} className="min-w-full flex-shrink-0 snap-center flex items-center justify-center p-8 h-[50vh] lg:h-[70vh]">
-            <img 
+          <div key={idx} className="min-w-full flex-shrink-0 snap-center flex items-center justify-center p-8 h-[50vh] lg:h-[70vh] relative">
+            <Image 
               src={img} 
               alt={`${title} - Image ${idx + 1}`} 
-              className="w-full h-full object-contain mix-blend-multiply"
+              fill
+              className="object-contain mix-blend-multiply"
+              unoptimized
             />
           </div>
         ))}
@@ -64,11 +67,13 @@ export default function ProductImageGallery({ images, title }: { images: string[
               activeIndex === idx ? 'border-black opacity-100' : 'border-transparent opacity-50 hover:opacity-100'
             }`}
           >
-            <div className="w-full h-full bg-[#F5F5F5] flex items-center justify-center">
-              <img 
+            <div className="w-full h-full bg-[#F5F5F5] flex items-center justify-center relative">
+              <Image 
                 src={img} 
                 alt={`Thumbnail ${idx + 1}`} 
-                className="w-full h-full object-cover"
+                fill
+                className="object-cover"
+                unoptimized
               />
             </div>
           </button>

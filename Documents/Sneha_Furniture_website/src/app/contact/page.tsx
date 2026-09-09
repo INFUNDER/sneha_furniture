@@ -1,4 +1,5 @@
-import { MapPin, Phone, Mail, Clock } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Send } from 'lucide-react';
+import Image from 'next/image';
 
 export default function ContactPage() {
   return (
@@ -66,14 +67,38 @@ export default function ContactPage() {
               </div>
             </div>
           </div>
+
+          <div className="bg-white p-8 rounded-sm shadow-sm border border-gray-100">
+            <h2 className="text-2xl font-bold font-heading mb-6 border-b pb-4">Send us a Message</h2>
+            <form className="space-y-4">
+              {/* Honeypot field for spam protection */}
+              <input type="text" name="b_address" style={{ display: 'none' }} tabIndex={-1} autoComplete="off" />
+              
+              <div>
+                <input type="text" required placeholder="Your Name" className="w-full border-b border-black py-3 outline-none text-sm font-bold uppercase tracking-widest bg-transparent placeholder-gray-400" />
+              </div>
+              <div>
+                <input type="email" required placeholder="Your Email" className="w-full border-b border-black py-3 outline-none text-sm font-bold uppercase tracking-widest bg-transparent placeholder-gray-400" />
+              </div>
+              <div>
+                <textarea required placeholder="Your Message" rows={4} className="w-full border-b border-black py-3 outline-none text-sm font-bold uppercase tracking-widest bg-transparent placeholder-gray-400 resize-none"></textarea>
+              </div>
+              <button type="submit" className="flex items-center gap-2 bg-black text-white px-8 py-4 rounded-full text-sm font-bold uppercase tracking-widest hover:bg-black/80 transition mt-4">
+                <span>Send Message</span>
+                <Send size={16} />
+              </button>
+            </form>
+          </div>
         </div>
 
         {/* Map / Image Placeholder */}
         <div className="bg-gray-100 rounded-sm overflow-hidden h-[500px] border border-gray-200 flex flex-col items-center justify-center relative">
-           <img 
+           <Image 
              src="https://images.unsplash.com/photo-1540638349517-3abd5afc5847?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
              alt="Showroom Location" 
-             className="w-full h-full object-cover absolute inset-0 opacity-50"
+             fill
+             className="object-cover absolute inset-0 opacity-50"
+             unoptimized
            />
            <div className="relative z-10 bg-white/90 backdrop-blur-md p-6 rounded-sm shadow-xl text-center max-w-sm">
              <MapPin size={48} className="mx-auto text-primary mb-4" />
