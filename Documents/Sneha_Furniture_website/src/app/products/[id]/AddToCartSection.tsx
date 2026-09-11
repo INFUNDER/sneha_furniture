@@ -24,18 +24,18 @@ export default function AddToCartSection({ product, coverImage }: { product: any
   };
 
   return (
-    <div className="mb-8 w-full">
+    <div className="mb-10 w-full">
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
         {/* Quantity Selector */}
-        <div className="flex items-center justify-between border border-gray-300 rounded-sm px-4 py-2 w-32 h-12 bg-white">
+        <div className="flex items-center justify-between border-2 border-gray-900 px-6 py-4 w-full sm:w-40 h-14 bg-white">
           <button 
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
-            className="text-gray-600 text-xl hover:text-black transition pb-1"
+            className="text-gray-400 text-2xl hover:text-black transition pb-1"
           >−</button>
-          <span className="font-bold text-black text-lg">{quantity}</span>
+          <span className="font-bold text-black text-xl">{quantity}</span>
           <button 
             onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
-            className="text-gray-600 text-xl hover:text-black transition pb-1"
+            className="text-gray-400 text-2xl hover:text-black transition pb-1"
           >+</button>
         </div>
         
@@ -43,22 +43,22 @@ export default function AddToCartSection({ product, coverImage }: { product: any
         <button 
           onClick={handleAddToCart}
           disabled={product.stock === 0 || isAdded}
-          className={`flex-1 h-12 rounded-sm font-bold text-sm tracking-wider uppercase transition shadow-sm ${
+          className={`flex-1 h-14 font-black text-base tracking-[0.2em] uppercase transition shadow-md ${
             isAdded ? 'bg-emerald-600 text-white' :
-            product.stock > 0 ? 'bg-[#f3724c] text-white hover:bg-[#d95a36]' : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+            product.stock > 0 ? 'bg-black text-white hover:bg-gray-800' : 'bg-gray-200 text-gray-500 cursor-not-allowed'
           }`}
         >
           {isAdded ? 'ADDED TO CART ✓' : product.stock > 0 ? 'ADD TO CART' : 'OUT OF STOCK'}
         </button>
 
         {/* Wishlist Button */}
-        <div className="flex items-center justify-center h-12 w-12 border border-gray-300 rounded-sm hover:bg-gray-50 transition bg-white shrink-0">
-          <WishlistButton productId={product.id} className="!relative !top-auto !right-auto !bg-transparent text-gray-600" />
+        <div className="flex items-center justify-center h-14 w-14 border-2 border-gray-900 hover:bg-gray-50 transition bg-white shrink-0">
+          <WishlistButton productId={product.id} className="!relative !top-auto !right-auto !bg-transparent text-gray-900" />
         </div>
       </div>
       
       {product.stock > 0 && product.stock <= 5 && (
-        <p className="text-[#d95a36] font-bold text-xs mt-3 tracking-wider">Hurry! Only {product.stock} left in stock.</p>
+        <p className="text-red-600 font-bold text-sm mt-4 tracking-wider">Hurry! Only {product.stock} left in stock.</p>
       )}
 
       {/* Trust Highlights under Add to Cart */}

@@ -63,7 +63,7 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${outfit.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-background text-foreground font-sans overflow-x-hidden">
         <NextTopLoader
-          color="#f3724c"
+          color="#000000"
           initialPosition={0.08}
           crawlSpeed={200}
           height={3}
@@ -71,7 +71,7 @@ export default function RootLayout({
           showSpinner={false}
           easing="ease"
           speed={200}
-          shadow="0 0 10px #f3724c,0 0 5px #f3724c"
+          shadow="0 0 10px #000000,0 0 5px #000000"
         />
         <CartProvider>
           <WishlistProvider>

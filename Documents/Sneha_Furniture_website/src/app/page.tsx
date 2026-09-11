@@ -29,7 +29,7 @@ export default async function Home() {
           <p className="text-white/90 mt-6 text-lg md:text-xl max-w-2xl mx-auto font-medium drop-shadow-md">
             Premium quality, handcrafted furniture designed to bring warmth and elegance to your home.
           </p>
-          <Link href="/shop" className="mt-8 inline-block bg-[#f3724c] hover:bg-[#d95a36] text-white px-10 py-4 rounded-sm font-bold uppercase tracking-widest transition shadow-lg">
+          <Link href="/shop" className="mt-8 inline-block bg-white text-black hover:bg-gray-200 px-10 py-4 font-black uppercase tracking-[0.2em] transition">
             Shop Collection
           </Link>
         </div>
@@ -44,7 +44,7 @@ export default async function Home() {
           <h2 className="text-3xl md:text-4xl font-black font-sans uppercase tracking-tight text-black leading-none">
             Best Sellers
           </h2>
-          <Link href="/shop" className="text-sm font-bold uppercase tracking-widest text-[#f3724c] hover:text-[#d95a36] transition">
+          <Link href="/shop" className="text-sm font-bold uppercase tracking-widest text-gray-500 hover:text-black transition border-b border-transparent hover:border-black pb-1">
             View All
           </Link>
         </div>

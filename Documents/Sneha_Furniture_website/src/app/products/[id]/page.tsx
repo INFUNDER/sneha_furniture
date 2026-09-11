@@ -150,13 +150,13 @@ export default async function ProductDetailsPage({ params }: { params: Promise<{
 
             {/* Key Specs Highlights */}
             {specsList.length > 0 && (
-              <div className="mb-8">
-                <h3 className="text-sm font-bold text-gray-900 mb-3 uppercase tracking-wider">Highlights</h3>
-                <div className="grid grid-cols-2 gap-y-3 gap-x-6">
+              <div className="mb-10">
+                <h3 className="text-sm font-black text-black mb-4 uppercase tracking-[0.2em] border-b-2 border-black pb-2">Highlights</h3>
+                <div className="flex flex-col">
                   {specsList.slice(0, 6).map((spec, i) => (
-                    <div key={i} className="flex gap-2 text-sm">
-                      <span className="text-gray-500 whitespace-nowrap">• {spec.key}:</span>
-                      <span className="font-semibold text-gray-900">{spec.val}</span>
+                    <div key={i} className="flex justify-between py-3 border-b border-gray-200">
+                      <span className="text-sm text-gray-500 font-medium w-1/3">{spec.key}</span>
+                      <span className="text-sm font-bold text-black w-2/3 text-right">{spec.val}</span>
                     </div>
                   ))}
                 </div>
