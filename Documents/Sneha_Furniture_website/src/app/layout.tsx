@@ -13,6 +13,7 @@ import MarqueeBanner from "@/components/MarqueeBanner";
 import CookieBanner from "@/components/CookieBanner";
 import MobileNav from "@/components/MobileNav";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import NextTopLoader from 'nextjs-toploader';
 
 const inter = Inter({
   variable: "--font-sans",
@@ -61,6 +62,17 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${outfit.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-background text-foreground font-sans overflow-x-hidden">
+        <NextTopLoader
+          color="#f3724c"
+          initialPosition={0.08}
+          crawlSpeed={200}
+          height={3}
+          crawl={true}
+          showSpinner={false}
+          easing="ease"
+          speed={200}
+          shadow="0 0 10px #f3724c,0 0 5px #f3724c"
+        />
         <CartProvider>
           <WishlistProvider>
             <script

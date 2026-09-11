@@ -61,26 +61,26 @@ export default async function Home() {
       </section>
 
       {/* Categories Section */}
-      <section className="py-16 bg-[#FAFAFA] px-6 w-full border-y border-gray-200">
+      <section className="py-24 bg-white px-6 w-full">
         <div className="max-w-[1400px] mx-auto">
           <h2 className="text-3xl md:text-4xl font-black font-sans uppercase tracking-tight text-black leading-none mb-10 text-center">
             Shop by Category
           </h2>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <Link href="/shop?category=Sofa" className="group relative aspect-square overflow-hidden bg-gray-100 flex items-center justify-center">
+          <Link href="/shop?category=Sofa" className="group relative aspect-[4/5] overflow-hidden flex items-center justify-center">
             <div className="absolute inset-0 bg-[url('/sofa-pic.jpg')] bg-cover bg-center transition-transform duration-700 group-hover:scale-105" />
             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
             <h3 className="relative z-10 text-4xl font-black uppercase text-white tracking-widest">Sofa</h3>
           </Link>
           
-          <Link href="/shop?category=Table" className="group relative aspect-square overflow-hidden bg-gray-100 flex items-center justify-center">
+          <Link href="/shop?category=Table" className="group relative aspect-[4/5] overflow-hidden flex items-center justify-center">
             <div className="absolute inset-0 bg-[url('/table.jpg')] bg-cover bg-center transition-transform duration-700 group-hover:scale-105" />
             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
             <h3 className="relative z-10 text-4xl font-black uppercase text-white tracking-widest">Table</h3>
           </Link>
           
-          <Link href="/shop?category=Chair" className="group relative aspect-square overflow-hidden bg-gray-100 flex items-center justify-center">
+          <Link href="/shop?category=Chair" className="group relative aspect-[4/5] overflow-hidden flex items-center justify-center">
             <div className="absolute inset-0 bg-[url('/chair.jpg')] bg-cover bg-center transition-transform duration-700 group-hover:scale-105" />
             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
             <h3 className="relative z-10 text-4xl font-black uppercase text-white tracking-widest">Chair</h3>
@@ -90,9 +90,9 @@ export default async function Home() {
       </section>
 
       {/* Commitment Section */}
-      <section className="py-16 bg-white px-6 max-w-[1400px] mx-auto w-full mb-8">
-        <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-center bg-gray-50 border border-gray-200 rounded-sm overflow-hidden shadow-sm">
-          <div className="w-full lg:w-1/2 aspect-[4/5] bg-gray-100 relative">
+      <section className="py-24 bg-white px-6 max-w-[1400px] mx-auto w-full mb-16">
+        <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 items-center">
+          <div className="w-full lg:w-1/2 aspect-[3/4] bg-gray-100 relative overflow-hidden">
             <Image 
               src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
               alt="Quality Commitment" 

@@ -19,10 +19,10 @@ export default function MinimalProductCard({ product }: { product: any }) {
   return (
     <div className="flex flex-col relative group cursor-pointer">
       {/* Image Gallery Container */}
-      <div className="relative mb-3 overflow-hidden rounded-sm bg-gray-50">
+      <div className="relative mb-4 overflow-hidden group">
         
         {/* Floating Tags */}
-        <div className="absolute top-3 left-3 z-20 bg-[#f3724c] text-white text-[10px] font-bold px-2 py-1 rounded-sm shadow-sm uppercase tracking-wider">
+        <div className="absolute top-3 left-3 z-20 bg-black text-white text-[10px] font-bold px-3 py-1 uppercase tracking-widest">
           {tag}
         </div>
         
@@ -58,25 +58,23 @@ export default function MinimalProductCard({ product }: { product: any }) {
           ))}
         </div>
         
-        {/* Pagination Dots (purely visual for swipe cue) */}
+        {/* Pagination Dots */}
         {images.length > 1 && (
-          <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 pointer-events-none z-10">
+          <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-2 pointer-events-none z-10">
             {images.map((_: any, idx: number) => (
-              <div key={idx} className="w-1.5 h-1.5 rounded-full bg-white/80 shadow-sm" />
+              <div key={idx} className="w-1.5 h-1.5 bg-black/40 backdrop-blur-md" />
             ))}
           </div>
         )}
       </div>
       
       {/* Text Section */}
-      <Link href={`/products/${product.id}`} className="flex flex-col gap-1">
-        <p className="text-xs text-gray-500 font-medium">Sneha Furniture</p>
-        <h3 className="text-sm font-semibold text-[#212121] leading-tight line-clamp-2">{product.title}</h3>
+      <Link href={`/products/${product.id}`} className="flex flex-col gap-1.5 px-1">
+        <h3 className="text-sm font-medium text-black leading-tight line-clamp-2 uppercase tracking-wide">{product.title}</h3>
         
-        <div className="flex items-baseline gap-2 mt-1">
-          <span className="text-base font-black text-black">₹{currentPrice.toLocaleString('en-IN')}</span>
-          <span className="text-xs text-gray-400 line-through">₹{mrp.toLocaleString('en-IN')}</span>
-          <span className="text-xs font-bold text-emerald-500">{discountPercentage}% OFF</span>
+        <div className="flex items-center gap-3 mt-1">
+          <span className="text-sm font-black text-black tracking-wider">₹{currentPrice.toLocaleString('en-IN')}</span>
+          <span className="text-xs text-gray-400 line-through tracking-wider">₹{mrp.toLocaleString('en-IN')}</span>
         </div>
       </Link>
     </div>

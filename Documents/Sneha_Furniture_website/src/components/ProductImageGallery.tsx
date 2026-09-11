@@ -41,16 +41,16 @@ export default function ProductImageGallery({ images, title }: { images: string[
       <div 
         ref={scrollContainerRef}
         onScroll={handleScroll}
-        className="w-full bg-[#F5F5F5] overflow-x-auto flex snap-x snap-mandatory hide-scrollbar rounded-xl border border-gray-100"
+        className="w-full overflow-x-auto flex snap-x snap-mandatory hide-scrollbar"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
         {images.map((img, idx) => (
-          <div key={idx} className="min-w-full flex-shrink-0 snap-center flex items-center justify-center p-8 h-[50vh] lg:h-[70vh] relative">
+          <div key={idx} className="min-w-full flex-shrink-0 snap-center flex items-center justify-center p-0 h-[50vh] lg:h-[70vh] relative">
             <Image 
               src={img} 
               alt={`${title} - Image ${idx + 1}`} 
               fill
-              className="object-contain mix-blend-multiply"
+              className="object-contain"
               unoptimized
             />
           </div>
@@ -67,7 +67,7 @@ export default function ProductImageGallery({ images, title }: { images: string[
               activeIndex === idx ? 'border-black opacity-100' : 'border-transparent opacity-50 hover:opacity-100'
             }`}
           >
-            <div className="w-full h-full bg-[#F5F5F5] flex items-center justify-center relative">
+            <div className="w-full h-full bg-white flex items-center justify-center relative">
               <Image 
                 src={img} 
                 alt={`Thumbnail ${idx + 1}`} 
