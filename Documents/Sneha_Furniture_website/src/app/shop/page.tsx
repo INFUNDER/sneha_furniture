@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import ShopUI from './ShopUI';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 export default async function ShopPage({ searchParams }: { searchParams: Promise<{ category?: string }> }) {
   const resolvedParams = await searchParams;

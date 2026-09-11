@@ -4,6 +4,8 @@ import { prisma } from '@/lib/prisma';
 import TrustBadges from '@/components/TrustBadges';
 import MinimalProductCard from '@/components/MinimalProductCard';
 
+export const revalidate = 60;
+
 export default async function Home() {
   // Fetch some products for the Best Sellers section
   const featuredProducts = await prisma.product.findMany({
