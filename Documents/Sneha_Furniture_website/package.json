@@ -11,9 +11,8 @@
     "pages:build": "npx @opennextjs/cloudflare"
   },
   "dependencies": {
-    "@netlify/plugin-nextjs": "^5.15.13",
+    "@next/third-parties": "^16.3.4",
     "@prisma/client": "^6.19.3",
-    "@vercel/analytics": "^2.0.1",
     "bcryptjs": "^3.0.3",
     "cloudinary": "^2.10.0",
     "jose": "^6.2.3",

@@ -12,6 +12,7 @@ import CartIcon from "@/components/CartIcon";
 import MarqueeBanner from "@/components/MarqueeBanner";
 import CookieBanner from "@/components/CookieBanner";
 import MobileNav from "@/components/MobileNav";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -177,6 +178,7 @@ export default function RootLayout({
           <CookieBanner />
           </WishlistProvider>
         </CartProvider>
+        <GoogleAnalytics gaId="G-PZ4QKENKZJ" />
       </body>
     </html>
   );
