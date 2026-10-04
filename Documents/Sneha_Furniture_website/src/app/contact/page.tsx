@@ -65,6 +65,21 @@ export default function ContactPage() {
                   </p>
                 </div>
               </div>
+
+              <div className="flex items-start gap-4 mt-8 pt-6 border-t border-gray-100">
+                <div className="p-3 bg-red-50 text-red-600 rounded-full">
+                  <Mail size={24} />
+                </div>
+                <div>
+                  <h3 className="font-bold text-gray-900 mb-1">Grievance Officer</h3>
+                  <p className="text-gray-600 text-sm mb-2">
+                    In accordance with the Consumer Protection (E-Commerce) Rules, 2020:
+                  </p>
+                  <p className="text-gray-800 font-medium">Sneha Furnitures</p>
+                  <p className="text-gray-600">snehafurnituresddn@gmail.com</p>
+                  <p className="text-gray-600">Dehradun, Uttarakhand</p>
+                </div>
+              </div>
             </div>
           </div>
 

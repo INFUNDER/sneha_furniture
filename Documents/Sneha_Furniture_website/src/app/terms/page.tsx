@@ -48,6 +48,16 @@ export default function TermsAndConditions() {
           These Terms will be governed by and interpreted in accordance with the laws of India. You submit to the exclusive 
           jurisdiction of the courts located in Dehradun, Uttarakhand for the resolution of any disputes.
         </p>
+
+        <h2 className="text-2xl font-bold text-black mt-8">7. Grievance Officer</h2>
+        <p>
+          In accordance with the Consumer Protection (E-Commerce) Rules, 2020, and the Information Technology Act, 2000, the name and contact details of the Grievance Officer are provided below:
+        </p>
+        <div className="bg-gray-50 p-6 border border-gray-200 mt-4">
+          <p className="font-bold">Sneha Furnitures</p>
+          <p>Email: snehafurnituresddn@gmail.com</p>
+          <p>Address: Dehradun</p>
+        </div>
       </div>
     </div>
   );

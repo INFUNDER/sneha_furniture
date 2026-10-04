@@ -17,6 +17,11 @@ export default function CookieBanner() {
     setIsVisible(false);
   };
 
+  const handleReject = () => {
+    localStorage.setItem('cookie_consent', 'false');
+    setIsVisible(false);
+  };
+
   if (!isVisible) return null;
 
   return (
@@ -24,12 +29,20 @@ export default function CookieBanner() {
       <div className="text-sm font-medium opacity-90 max-w-4xl">
         We use cookies to enhance your browsing experience, serve personalized ads or content, and analyze our traffic. By clicking "Accept", you consent to our use of cookies. Read our <a href="/privacy" className="underline hover:text-gray-300">Privacy Policy</a> for more info.
       </div>
-      <button 
-        onClick={handleAccept}
-        className="shrink-0 bg-white text-black px-8 py-3 rounded-full text-sm font-bold uppercase tracking-widest hover:bg-gray-200 transition"
-      >
-        Accept
-      </button>
+      <div className="flex gap-4">
+        <button 
+          onClick={handleReject}
+          className="shrink-0 bg-transparent text-white border border-white px-8 py-3 rounded-full text-sm font-bold uppercase tracking-widest hover:bg-gray-800 transition"
+        >
+          Reject
+        </button>
+        <button 
+          onClick={handleAccept}
+          className="shrink-0 bg-white text-black px-8 py-3 rounded-full text-sm font-bold uppercase tracking-widest hover:bg-gray-200 transition"
+        >
+          Accept
+        </button>
+      </div>
     </div>
   );
 }

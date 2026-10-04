@@ -84,6 +84,30 @@ export default function RegisterPage() {
             />
           </div>
 
+          <div className="space-y-4 pt-4">
+            <label className="flex items-start gap-3 cursor-pointer group">
+              <input 
+                type="checkbox" 
+                required 
+                className="mt-1 w-4 h-4 rounded-none border-black text-black focus:ring-black accent-black"
+              />
+              <span className="text-xs font-bold uppercase tracking-widest opacity-80 group-hover:opacity-100 transition">
+                I agree to the <a href="/terms" className="border-b border-black pb-0.5">Terms of Service</a> and <a href="/privacy" className="border-b border-black pb-0.5">Privacy Policy</a>
+              </span>
+            </label>
+
+            <label className="flex items-start gap-3 cursor-pointer group">
+              <input 
+                type="checkbox" 
+                required 
+                className="mt-1 w-4 h-4 rounded-none border-black text-black focus:ring-black accent-black"
+              />
+              <span className="text-xs font-bold uppercase tracking-widest opacity-80 group-hover:opacity-100 transition">
+                I confirm that I am 18 years of age or older
+              </span>
+            </label>
+          </div>
+
           <button 
             type="submit" 
             disabled={loading}

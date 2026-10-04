@@ -71,7 +71,7 @@ export default function ProfilePage() {
               <div className="animate-in fade-in duration-300">
                 <h2 className="text-2xl font-black uppercase tracking-widest mb-12 border-b border-black pb-4">Account Details</h2>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-2xl">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-2xl mb-16">
                   <div>
                     <label className="block text-sm font-bold uppercase tracking-widest opacity-50 mb-2">Full Name</label>
                     <div className="text-xl font-black uppercase">{user.name}</div>
@@ -86,6 +86,22 @@ export default function ProfilePage() {
                       {user.role}
                     </div>
                   </div>
+                </div>
+
+                <div className="pt-12 border-t border-black">
+                  <h3 className="text-lg font-black uppercase tracking-widest text-red-600 mb-4">Danger Zone</h3>
+                  <p className="text-sm font-bold opacity-70 mb-6">Permanently delete your account and all associated data. This action cannot be undone.</p>
+                  <button 
+                    onClick={async () => {
+                      if(window.confirm('Are you sure you want to permanently delete your account and all your data? This cannot be undone.')) {
+                        await fetch('/api/auth/delete-account', { method: 'DELETE' });
+                        window.location.href = '/register';
+                      }
+                    }}
+                    className="border border-red-600 text-red-600 px-6 py-3 rounded-full text-sm font-bold uppercase tracking-widest hover:bg-red-600 hover:text-white transition"
+                  >
+                    Delete My Account
+                  </button>
                 </div>
               </div>
             )}
