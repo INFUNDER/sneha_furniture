@@ -2,22 +2,22 @@
 
 import { MessageCircle } from 'lucide-react';
 import { usePathname } from 'next/navigation';
+import { BRAND_NAME, SITE_URL, WHATSAPP_NUMBER } from '@/lib/site';
 
 export default function WhatsAppWidget() {
   const pathname = usePathname();
-  const phoneNumber = '918755594915'; // +91 87555 94915
   
-  let message = 'Hi Sneha Furniture, I would like to know more about your premium furniture collection.';
+  let message = `Hi ${BRAND_NAME}, I would like to know more about your premium furniture collection.`;
   
   // Dynamic message based on current page
   if (pathname.startsWith('/products/')) {
-    message = `Hi Sneha Furniture, I am currently looking at a product on your website and would like to ask about custom sizes or floor models. Link: https://localhost:3000${pathname}`;
+    message = `Hi ${BRAND_NAME}, I am currently looking at a product on your website and would like to ask about custom sizes or floor models. Link: ${SITE_URL}${pathname}`;
   } else if (pathname === '/contact') {
-    message = 'Hi Sneha Furniture, I would like to visit your showroom in Dehradun. Can you share the exact location?';
+    message = `Hi ${BRAND_NAME}, I would like to visit your showroom in Dehradun. Can you share the exact location?`;
   }
 
   const encodedMessage = encodeURIComponent(message);
-  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
 
   return (
     <a 

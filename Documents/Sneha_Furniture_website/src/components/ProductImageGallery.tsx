@@ -1,16 +1,15 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import Image from 'next/image';
+import { productImage, PLACEHOLDER_IMAGE } from '@/lib/images';
 
-export default function ProductImageGallery({ images, title }: { images: string[], title: string }) {
+export default function ProductImageGallery({ images: rawImages, title }: { images: string[], title: string }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Default fallback if no images provided
-  if (!images || images.length === 0) {
-    images = ['https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=800&q=80'];
-  }
+  const images = rawImages && rawImages.length > 0 ? rawImages : [PLACEHOLDER_IMAGE];
 
   // Handle clicking a thumbnail
   const scrollToImage = (index: number) => {
@@ -47,9 +46,11 @@ export default function ProductImageGallery({ images, title }: { images: string[
         {images.map((img, idx) => (
           <div key={idx} className="min-w-full flex-shrink-0 snap-center flex items-center justify-center p-0 h-[50vh] lg:h-[70vh] relative">
             <Image 
-              src={img} 
+              src={productImage(img, 1200)} 
               alt={`${title} - Image ${idx + 1}`} 
               fill
+              sizes="(min-width: 1024px) 45vw, 100vw"
+              priority={idx === 0}
               className="object-contain"
               unoptimized
             />
@@ -62,6 +63,8 @@ export default function ProductImageGallery({ images, title }: { images: string[
         {images.map((img, idx) => (
           <button
             key={idx}
+            type="button"
+            aria-label={`Show image ${idx + 1}`}
             onClick={() => scrollToImage(idx)}
             className={`relative flex-shrink-0 w-20 h-20 lg:w-24 lg:h-24 rounded-lg overflow-hidden border-2 transition-all ${
               activeIndex === idx ? 'border-black opacity-100' : 'border-transparent opacity-50 hover:opacity-100'
@@ -69,9 +72,10 @@ export default function ProductImageGallery({ images, title }: { images: string[
           >
             <div className="w-full h-full bg-white flex items-center justify-center relative">
               <Image 
-                src={img} 
-                alt={`Thumbnail ${idx + 1}`} 
+                src={productImage(img, 200)} 
+                alt="" 
                 fill
+                sizes="96px"
                 className="object-cover"
                 unoptimized
               />

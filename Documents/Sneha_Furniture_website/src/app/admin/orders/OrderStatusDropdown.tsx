@@ -21,7 +21,7 @@ export default function OrderStatusDropdown({ orderId, currentStatus }: { orderI
         setStatus(currentStatus);
         alert('Failed to update status');
       }
-    } catch (err) {
+    } catch {
       setStatus(currentStatus);
       alert('An error occurred');
     } finally {

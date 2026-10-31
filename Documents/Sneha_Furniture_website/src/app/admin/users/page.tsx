@@ -1,6 +1,9 @@
+import { assertAdminPage } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 
 export default async function AdminUsersPage() {
+  await assertAdminPage();
+
   const users = await prisma.user.findMany({
     orderBy: { createdAt: 'desc' },
     select: {
@@ -36,7 +39,6 @@ export default async function AdminUsersPage() {
                   <th className="px-8 py-4">ROLE</th>
                   <th className="px-8 py-4">JOINED DATE</th>
                   <th className="px-8 py-4">ORDERS</th>
-                  <th className="px-8 py-4 text-right">ACTIONS</th>
                 </tr>
               </thead>
               <tbody className="font-bold uppercase tracking-widest text-sm">
@@ -56,12 +58,6 @@ export default async function AdminUsersPage() {
                     </td>
                     <td className="px-8 py-6">
                       {user._count.orders}
-                    </td>
-                    <td className="px-8 py-6 text-right space-x-6">
-                      <button className="hover:opacity-50 transition border-b border-black pb-1">EDIT</button>
-                      {user.role !== 'ADMIN' && (
-                        <button className="text-red-500 hover:opacity-50 transition border-b border-red-500 pb-1">BLOCK</button>
-                      )}
                     </td>
                   </tr>
                 ))}

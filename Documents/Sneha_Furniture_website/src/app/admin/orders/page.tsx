@@ -1,8 +1,11 @@
+import { assertAdminPage } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
 import OrderStatusDropdown from './OrderStatusDropdown';
 
 export default async function AdminOrdersPage() {
+  await assertAdminPage();
+
   const orders = await prisma.order.findMany({
     orderBy: { createdAt: 'desc' },
     include: { user: true }
@@ -36,7 +39,7 @@ export default async function AdminOrdersPage() {
               <tbody className="font-bold uppercase tracking-widest text-sm">
                 {orders.map(order => {
                   let parsedAddress = { name: '', phone: '', city: '' };
-                  try { parsedAddress = JSON.parse(order.shippingAddress); } catch (e) {}
+                  try { parsedAddress = JSON.parse(order.shippingAddress); } catch {}
 
                   return (
                     <tr key={order.id} className="border-b border-gray-200 hover:bg-gray-50 transition">

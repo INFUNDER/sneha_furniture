@@ -1,4 +1,11 @@
+import type { Metadata } from 'next';
+import { BRAND_NAME } from '@/lib/site';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: 'Services',
+  description: `Custom furniture design, interior styling, restoration and consultation from ${BRAND_NAME}.`,
+};
 
 export default function ServicesPage() {
   return (

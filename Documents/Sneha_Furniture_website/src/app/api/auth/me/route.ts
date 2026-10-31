@@ -6,5 +6,6 @@ export async function GET() {
   if (!session) {
     return NextResponse.json({ user: null }, { status: 401 });
   }
-  return NextResponse.json({ user: session }, { status: 200 });
+  const { id, email, role, name } = session;
+  return NextResponse.json({ user: { id, email, role, name } }, { status: 200 });
 }

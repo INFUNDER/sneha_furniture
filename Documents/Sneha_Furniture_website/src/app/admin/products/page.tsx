@@ -1,3 +1,4 @@
+import { assertAdminPage } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
 import ProductActions from './ProductActions';
@@ -5,6 +6,8 @@ import ProductActions from './ProductActions';
 export const dynamic = 'force-dynamic';
 
 export default async function AdminProducts() {
+  await assertAdminPage();
+
   const products = await prisma.product.findMany({
     orderBy: { createdAt: 'desc' }
   });

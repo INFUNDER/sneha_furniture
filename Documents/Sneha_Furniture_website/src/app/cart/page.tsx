@@ -2,6 +2,7 @@
 
 import { useCart } from '@/context/CartContext';
 import Link from 'next/link';
+import { productImage } from '@/lib/images';
 
 export default function CartPage() {
   const { items, removeFromCart, updateQuantity, total } = useCart();
@@ -35,7 +36,7 @@ export default function CartPage() {
               <div key={item.id} className="pb-12 border-b border-gray-200 flex flex-col md:grid md:grid-cols-12 md:items-center gap-6">
                 <div className="col-span-6 flex gap-8 items-center">
                   <div className="w-32 h-32 bg-[#F5F5F5] overflow-hidden">
-                    <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+                    <img src={productImage(item.image, 200)} alt={item.title} className="w-full h-full object-cover" />
                   </div>
                   <div>
                     <h3 className="text-xl font-bold uppercase tracking-wide mb-4 line-clamp-2">{item.title}</h3>
@@ -48,11 +49,14 @@ export default function CartPage() {
                 <div className="col-span-2 flex justify-center">
                   <div className="flex items-center justify-between border border-black rounded-full px-4 py-1 w-24 h-10">
                     <button 
+                      aria-label="Decrease quantity"
                       onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
                       className="text-black text-xl hover:opacity-50 transition leading-none pb-1"
                     >−</button>
                     <span className="font-bold text-black text-sm">{item.quantity}</span>
                     <button 
+                      aria-label="Increase quantity"
+                      disabled={item.stock !== undefined && item.quantity >= item.stock}
                       onClick={() => updateQuantity(item.id, item.quantity + 1)}
                       className="text-black text-xl hover:opacity-50 transition leading-none pb-1"
                     >+</button>
@@ -75,7 +79,7 @@ export default function CartPage() {
                 <span>₹{total.toLocaleString('en-IN')}</span>
               </div>
               <div className="flex justify-between">
-                <span className="opacity-50">Shipping</span>
+                <span className="opacity-50">Delivery</span>
                 <span>FREE</span>
               </div>
               <div className="pt-4 border-t border-gray-200 flex justify-between font-black text-xl">

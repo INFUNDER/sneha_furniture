@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 import { getSession } from '@/lib/auth';
 import Link from 'next/link';
+import { parseImages, productImage } from '@/lib/images';
 
 export default async function CustomerOrderDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
@@ -26,7 +27,7 @@ export default async function CustomerOrderDetailsPage({ params }: { params: Pro
   if (!order) return notFound();
 
   let address = { name: '', street: '', city: '', state: '', pincode: '', phone: '' };
-  try { address = JSON.parse(order.shippingAddress); } catch (e) {}
+  try { address = JSON.parse(order.shippingAddress); } catch {}
 
   return (
     <div className="max-w-[1400px] mx-auto px-6 py-24 bg-white min-h-screen">
@@ -67,7 +68,7 @@ export default async function CustomerOrderDetailsPage({ params }: { params: Pro
           <div className="text-black text-sm font-bold uppercase tracking-widest space-y-4">
             <div className="flex justify-between">
               <span className="opacity-50">METHOD:</span>
-              <span>{order.paymentMethod}</span>
+              <span>{order.paymentMethod === 'COD' ? 'CASH ON DELIVERY' : order.paymentMethod}</span>
             </div>
             <div className="flex justify-between">
               <span className="opacity-50">STATUS:</span>
@@ -96,8 +97,7 @@ export default async function CustomerOrderDetailsPage({ params }: { params: Pro
       <h2 className="text-3xl font-black uppercase tracking-tight mb-8 border-b border-black pb-4">PURCHASED ITEMS</h2>
       <div className="space-y-8">
         {order.items.map((item) => {
-          const images = JSON.parse(item.product.images || '[]');
-          const coverImage = images[0] || 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=200&q=80';
+          const coverImage = productImage(parseImages(item.product.images)[0] || '', 200);
           
           return (
             <div key={item.id} className="flex flex-col md:flex-row items-start md:items-center gap-8 border-b border-gray-200 pb-8">
@@ -121,7 +121,7 @@ export default async function CustomerOrderDetailsPage({ params }: { params: Pro
       <div className="mt-16 pt-8 flex justify-end">
         <div className="w-full max-w-sm">
           <div className="flex justify-between items-center">
-            <span className="font-bold text-sm uppercase tracking-widest opacity-50">TOTAL PAID</span>
+            <span className="font-bold text-sm uppercase tracking-widest opacity-50">{order.paymentStatus === 'PAID' ? 'TOTAL PAID' : 'TOTAL PAYABLE'}</span>
             <span className="font-black text-4xl">₹{order.totalAmount.toLocaleString('en-IN')}</span>
           </div>
         </div>

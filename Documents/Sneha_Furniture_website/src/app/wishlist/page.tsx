@@ -18,7 +18,7 @@ export default async function WishlistPage() {
           Please log in to view or add items to your wishlist.
         </p>
         <Link 
-          href="/login?redirect=/wishlist" 
+          href="/login?callbackUrl=/wishlist" 
           className="bg-black text-white px-8 py-3 rounded-full font-bold text-sm tracking-widest uppercase hover:bg-black/80 transition"
         >
           Log In

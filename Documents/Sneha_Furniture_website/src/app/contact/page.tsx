@@ -1,5 +1,14 @@
-import { MapPin, Phone, Mail, Clock, Send } from 'lucide-react';
+import type { Metadata } from 'next';
+import { MapPin, Phone, Mail, Clock } from 'lucide-react';
 import Image from 'next/image';
+import ContactForm from '@/components/ContactForm';
+import GrievanceOfficer from '@/components/GrievanceOfficer';
+import { ADDRESS, BRAND_NAME, CONTACT_EMAIL, PHONES } from '@/lib/site';
+
+export const metadata: Metadata = {
+  title: 'Contact Us & Showroom',
+  description: `Visit the ${BRAND_NAME} showroom on Saharanpur Road, Dehradun, or call, WhatsApp or email us.`,
+};
 
 export default function ContactPage() {
   return (
@@ -27,8 +36,8 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-bold text-gray-900 mb-1">Showroom Address</h3>
                   <p className="text-gray-600 leading-relaxed">
-                    7, Saharanpur Rd, Patel Nagar,<br />
-                    Dehradun, Uttarakhand 248001
+                    {ADDRESS.street},<br />
+                    {ADDRESS.city}, {ADDRESS.state} {ADDRESS.pincode}
                   </p>
                 </div>
               </div>
@@ -38,8 +47,10 @@ export default function ContactPage() {
                   <Phone size={24} />
                 </div>
                 <div>
-                  <h3 className="font-bold text-gray-900 mb-1">Phone Number</h3>
-                  <p className="text-gray-600">+91 96343 12102</p>
+                  <h3 className="font-bold text-gray-900 mb-1">Phone Numbers</h3>
+                  {PHONES.map((p) => (
+                    <p key={p.tel}><a href={`tel:${p.tel}`} className="text-gray-600 hover:text-black">{p.display}</a></p>
+                  ))}
                 </div>
               </div>
 
@@ -49,7 +60,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h3 className="font-bold text-gray-900 mb-1">Email Address</h3>
-                  <p className="text-gray-600">contact@snehafurniture.com</p>
+                  <a href={`mailto:${CONTACT_EMAIL}`} className="text-gray-600 hover:text-black break-all">{CONTACT_EMAIL}</a>
                 </div>
               </div>
 
@@ -75,9 +86,7 @@ export default function ContactPage() {
                   <p className="text-gray-600 text-sm mb-2">
                     In accordance with the Consumer Protection (E-Commerce) Rules, 2020:
                   </p>
-                  <p className="text-gray-800 font-medium">Sneha Furnitures</p>
-                  <p className="text-gray-600">snehafurnituresddn@gmail.com</p>
-                  <p className="text-gray-600">Dehradun, Uttarakhand</p>
+                  <GrievanceOfficer className="text-gray-600 text-sm space-y-1" />
                 </div>
               </div>
             </div>
@@ -85,24 +94,7 @@ export default function ContactPage() {
 
           <div className="bg-white p-8 rounded-sm shadow-sm border border-gray-100">
             <h2 className="text-2xl font-bold font-heading mb-6 border-b pb-4">Send us a Message</h2>
-            <form className="space-y-4">
-              {/* Honeypot field for spam protection */}
-              <input type="text" name="b_address" style={{ display: 'none' }} tabIndex={-1} autoComplete="off" />
-              
-              <div>
-                <input type="text" required placeholder="Your Name" className="w-full border-b border-black py-3 outline-none text-sm font-bold uppercase tracking-widest bg-transparent placeholder-gray-400" />
-              </div>
-              <div>
-                <input type="email" required placeholder="Your Email" className="w-full border-b border-black py-3 outline-none text-sm font-bold uppercase tracking-widest bg-transparent placeholder-gray-400" />
-              </div>
-              <div>
-                <textarea required placeholder="Your Message" rows={4} className="w-full border-b border-black py-3 outline-none text-sm font-bold uppercase tracking-widest bg-transparent placeholder-gray-400 resize-none"></textarea>
-              </div>
-              <button type="submit" className="flex items-center gap-2 bg-black text-white px-8 py-4 rounded-full text-sm font-bold uppercase tracking-widest hover:bg-black/80 transition mt-4">
-                <span>Send Message</span>
-                <Send size={16} />
-              </button>
-            </form>
+            <ContactForm />
           </div>
         </div>
 
@@ -117,7 +109,7 @@ export default function ContactPage() {
            />
            <div className="relative z-10 bg-white/90 backdrop-blur-md p-6 rounded-sm shadow-xl text-center max-w-sm">
              <MapPin size={48} className="mx-auto text-primary mb-4" />
-             <h3 className="text-xl font-bold mb-2">Sneha Furniture</h3>
+             <h3 className="text-xl font-bold mb-2">{BRAND_NAME}</h3>
              <p className="text-gray-600 mb-4">Located in the heart of Dehradun, easily accessible from Saharanpur Road.</p>
              <a 
                href="https://maps.app.goo.gl/FFm6prxW6b9yJtcKA" 

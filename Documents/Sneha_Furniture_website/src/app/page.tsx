@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { prisma } from '@/lib/prisma';
 import TrustBadges from '@/components/TrustBadges';
 import MinimalProductCard from '@/components/MinimalProductCard';
+import { parseImages, productImage } from '@/lib/images';
 
 export const revalidate = 60;
 
@@ -12,6 +13,16 @@ export default async function Home() {
     take: 8,
     orderBy: { createdAt: 'desc' }
   });
+
+  // Category tiles are built from the catalogue so they never lead to an empty page.
+  const allProducts = await prisma.product.findMany({
+    select: { category: true, images: true },
+    orderBy: { createdAt: 'asc' },
+  });
+  const categoryTiles = new Map<string, string>();
+  for (const p of allProducts) {
+    if (!categoryTiles.has(p.category)) categoryTiles.set(p.category, parseImages(p.images)[0] || '');
+  }
   return (
     <div className="flex flex-col min-h-screen bg-white">
       {/* Hero Section */}
@@ -42,7 +53,7 @@ export default async function Home() {
       <section className="py-16 bg-white px-6 max-w-[1400px] mx-auto w-full">
         <div className="flex justify-between items-end mb-10 border-b border-gray-200 pb-4">
           <h2 className="text-3xl md:text-4xl font-black font-sans uppercase tracking-tight text-black leading-none">
-            Best Sellers
+            New Arrivals
           </h2>
           <Link href="/shop" className="text-sm font-bold uppercase tracking-widest text-gray-500 hover:text-black transition border-b border-transparent hover:border-black pb-1">
             View All
@@ -67,24 +78,23 @@ export default async function Home() {
             Shop by Category
           </h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <Link href="/shop?category=Sofa" className="group relative aspect-[4/5] overflow-hidden flex items-center justify-center">
-            <div className="absolute inset-0 bg-[url('/sofa-pic.jpg')] bg-cover bg-center transition-transform duration-700 group-hover:scale-105" />
-            <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
-            <h3 className="relative z-10 text-4xl font-black uppercase text-white tracking-widest">Sofa</h3>
-          </Link>
-          
-          <Link href="/shop?category=Table" className="group relative aspect-[4/5] overflow-hidden flex items-center justify-center">
-            <div className="absolute inset-0 bg-[url('/table.jpg')] bg-cover bg-center transition-transform duration-700 group-hover:scale-105" />
-            <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
-            <h3 className="relative z-10 text-4xl font-black uppercase text-white tracking-widest">Table</h3>
-          </Link>
-          
-          <Link href="/shop?category=Chair" className="group relative aspect-[4/5] overflow-hidden flex items-center justify-center">
-            <div className="absolute inset-0 bg-[url('/chair.jpg')] bg-cover bg-center transition-transform duration-700 group-hover:scale-105" />
-            <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
-            <h3 className="relative z-10 text-4xl font-black uppercase text-white tracking-widest">Chair</h3>
-          </Link>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {[...categoryTiles].map(([category, image]) => (
+            <Link key={category} href={`/shop?category=${encodeURIComponent(category)}`} className="group relative aspect-[4/5] overflow-hidden flex items-center justify-center bg-gray-100">
+              {image && (
+                <Image
+                  src={productImage(image, 800)}
+                  alt=""
+                  fill
+                  sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  unoptimized
+                />
+              )}
+              <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
+              <h3 className="relative z-10 text-3xl font-black uppercase text-white tracking-widest text-center px-4">{category}</h3>
+            </Link>
+          ))}
         </div>
         </div>
       </section>

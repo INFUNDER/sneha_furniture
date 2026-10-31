@@ -1,7 +1,10 @@
+import { assertAdminPage } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
 
 export default async function AdminDashboard() {
+  await assertAdminPage();
+
   const productsCount = await prisma.product.count();
   const ordersCount = await prisma.order.count();
   const usersCount = await prisma.user.count();

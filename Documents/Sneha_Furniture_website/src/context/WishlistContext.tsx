@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 type WishlistContextType = {
   wishlistIds: string[];
@@ -15,29 +15,22 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
   const [wishlistIds, setWishlistIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
-    fetchWishlist();
+    fetch('/api/wishlist')
+      .then((res) => (res.ok ? res.json() : { items: [] }))
+      .then((data) => setWishlistIds(data.items || []))
+      .catch((error) => console.error('Failed to fetch wishlist', error))
+      .finally(() => setIsLoading(false));
   }, []);
-
-  const fetchWishlist = async () => {
-    try {
-      const res = await fetch('/api/wishlist');
-      if (res.ok) {
-        const data = await res.json();
-        setWishlistIds(data.items || []);
-      }
-    } catch (error) {
-      console.error('Failed to fetch wishlist', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const toggleWishlist = async (productId: string) => {
     // Optimistic update
     const isCurrentlyWishlisted = wishlistIds.includes(productId);
-    
+    const revert = () =>
+      setWishlistIds(prev => isCurrentlyWishlisted ? [...prev, productId] : prev.filter(id => id !== productId));
+
     if (isCurrentlyWishlisted) {
       setWishlistIds(prev => prev.filter(id => id !== productId));
     } else {
@@ -52,19 +45,15 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
       });
 
       if (res.status === 401) {
-        // Revert if unauthorized and redirect to login
-        setWishlistIds(prev => isCurrentlyWishlisted ? [...prev, productId] : prev.filter(id => id !== productId));
-        router.push('/login');
+        // Revert and send the visitor to log in, then back here
+        revert();
+        router.push(`/login?callbackUrl=${encodeURIComponent(pathname)}`);
         return;
       }
 
-      if (!res.ok) {
-        // Revert on error
-        setWishlistIds(prev => isCurrentlyWishlisted ? [...prev, productId] : prev.filter(id => id !== productId));
-      }
-    } catch (error) {
-      // Revert on error
-      setWishlistIds(prev => isCurrentlyWishlisted ? [...prev, productId] : prev.filter(id => id !== productId));
+      if (!res.ok) revert();
+    } catch {
+      revert();
     }
   };
 

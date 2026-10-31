@@ -1,7 +1,6 @@
 'use client';
 
 import { useCart } from '@/context/CartContext';
-import { ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 
 export default function CartIcon() {

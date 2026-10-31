@@ -1,11 +1,12 @@
 'use client';
 
 export default function MarqueeBanner() {
-  const text = "🔥 PREMIUM FURNITURE SALE • GET UP TO 50% OFF • LIMITED TIME DEAL • FREE SHIPPING 🔥";
-  
+  const text = "FREE DELIVERY ON ALL ORDERS • CASH ON DELIVERY AVAILABLE • VISIT OUR SHOWROOM IN DEHRADUN";
+
   return (
     <div className="w-full bg-black text-white py-2 overflow-hidden flex items-center relative z-50">
-      <div className="marquee-content whitespace-nowrap text-xs font-bold uppercase tracking-widest flex">
+      <p className="sr-only">{text}</p>
+      <div className="marquee-content whitespace-nowrap text-xs font-bold uppercase tracking-widest flex" aria-hidden="true">
         <span className="px-8">{text}</span>
         <span className="px-8">{text}</span>
         <span className="px-8">{text}</span>
@@ -19,6 +20,9 @@ export default function MarqueeBanner() {
         .marquee-content {
           animation: marquee 20s linear infinite;
           min-width: 200%;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .marquee-content { animation: none; }
         }
       `}</style>
     </div>

@@ -1,5 +1,11 @@
-import Link from 'next/link';
+import type { Metadata } from 'next';
+import { BRAND_NAME } from '@/lib/site';
 import Image from 'next/image';
+
+export const metadata: Metadata = {
+  title: 'About Us',
+  description: `The story and philosophy behind ${BRAND_NAME}, Dehradun.`,
+};
 
 export default function AboutPage() {
   return (

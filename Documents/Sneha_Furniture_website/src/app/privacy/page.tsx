@@ -1,59 +1,94 @@
+import type { Metadata } from 'next';
+import GrievanceOfficer from '@/components/GrievanceOfficer';
+import { BRAND_NAME } from '@/lib/site';
+
+export const metadata: Metadata = {
+  title: 'Privacy Policy',
+  description: `How ${BRAND_NAME} collects, uses and protects your personal data.`,
+};
+
+const h2 = 'text-2xl font-bold text-black mt-8';
+const list = 'list-disc pl-6 space-y-2';
+
 export default function PrivacyPolicy() {
   return (
     <div className="max-w-4xl mx-auto px-6 py-20">
       <h1 className="text-4xl font-black mb-8">Privacy Policy</h1>
       <div className="space-y-6 text-gray-700 leading-relaxed">
-        <p><strong>Last updated:</strong> September 2026</p>
-        
+        <p><strong>Last updated:</strong> October 2026</p>
+
         <p>
-          Welcome to Sneha Furniture. We respect your privacy and are committed to protecting your personal data. 
-          This privacy policy will inform you as to how we look after your personal data when you visit our website 
-          (regardless of where you visit it from) and tell you about your privacy rights and how the law protects you.
-          This policy is compliant with the Information Technology Act, 2000 and the Information Technology (Reasonable Security Practices and Procedures and Sensitive Personal Data or Information) Rules, 2011.
+          {BRAND_NAME} (&quot;we&quot;, &quot;us&quot;) respects your privacy. This policy explains what personal data we
+          collect when you use this website, why we collect it, who we share it with and the rights you have. We process
+          personal data in line with the Digital Personal Data Protection Act, 2023 (DPDP Act) and the Information
+          Technology Act, 2000.
         </p>
-        
-        <h2 className="text-2xl font-bold text-black mt-8">1. Data We Collect</h2>
-        <p>We may collect, use, store and transfer different kinds of personal data about you which we have grouped together as follows:</p>
-        <ul className="list-disc pl-6 space-y-2">
-          <li><strong>Identity Data:</strong> includes first name, last name, username or similar identifier.</li>
-          <li><strong>Contact Data:</strong> includes billing address, delivery address, email address, and telephone numbers.</li>
-          <li><strong>Financial Data:</strong> includes payment status. We do NOT store your credit/debit card details on our servers. All payments are securely processed by Razorpay.</li>
-          <li><strong>Transaction Data:</strong> includes details about payments to and from you and other details of products you have purchased from us.</li>
+
+        <h2 className={h2}>1. Data We Collect</h2>
+        <ul className={list}>
+          <li><strong>Account data:</strong> your name, email address and a securely hashed password when you create an account.</li>
+          <li><strong>Order data:</strong> delivery name, address, phone number, the products you order, amounts and payment status.</li>
+          <li><strong>Messages:</strong> your name, email, optional phone number and message when you use our contact form.</li>
+          <li><strong>Reviews and wishlist:</strong> reviews you write and products you save.</li>
+          <li><strong>Usage data (only with your consent):</strong> pages visited and device information collected by Google Analytics.</li>
+        </ul>
+        <p>We do not collect or store your card, UPI or bank details. Online payments, when available, are handled entirely by Razorpay.</p>
+
+        <h2 className={h2}>2. Why We Use Your Data</h2>
+        <ul className={list}>
+          <li>To create and manage your account and keep you signed in.</li>
+          <li>To process, deliver and support your orders, including order confirmation emails.</li>
+          <li>To reply to your enquiries.</li>
+          <li>To meet legal obligations such as tax and accounting record keeping.</li>
+          <li>With your consent, to understand how the website is used so we can improve it.</li>
         </ul>
 
-        <h2 className="text-2xl font-bold text-black mt-8">2. How We Use Your Data</h2>
-        <p>We will only use your personal data when the law allows us to. Most commonly, we will use your personal data in the following circumstances:</p>
-        <ul className="list-disc pl-6 space-y-2">
-          <li>To process and deliver your furniture orders, including managing payments, fees, and charges.</li>
-          <li>To communicate with you regarding your order status, delivery schedules, and support queries.</li>
-          <li>To improve our website, products, services, marketing, and customer relationships.</li>
+        <h2 className={h2}>3. Who We Share It With</h2>
+        <p>We do not sell your personal data. We share it only with service providers who process it on our behalf:</p>
+        <ul className={list}>
+          <li><strong>Supabase</strong> (database hosting) and <strong>Render</strong> (website hosting).</li>
+          <li><strong>Resend</strong> (sending order and contact emails).</li>
+          <li><strong>Cloudinary</strong> (hosting product images; no customer data).</li>
+          <li><strong>Razorpay</strong> (online payments, when enabled).</li>
+          <li><strong>Google Analytics</strong> (website statistics, only if you accept analytics cookies).</li>
+          <li>Delivery partners, who receive your name, address and phone number to deliver your order.</li>
+        </ul>
+        <p>Some of these providers may store data outside India, with safeguards required under applicable law.</p>
+
+        <h2 className={h2}>4. Cookies</h2>
+        <p>
+          We use one essential cookie to keep you signed in, and your browser&apos;s local storage to remember your cart and
+          cookie choice. Google Analytics cookies are only set if you click &quot;Accept&quot; on the cookie banner. You
+          can change your choice at any time using &quot;Cookie Settings&quot; in the website footer.
+        </p>
+
+        <h2 className={h2}>5. How Long We Keep It</h2>
+        <ul className={list}>
+          <li>Account data: until you delete your account.</li>
+          <li>Order records: for as long as tax and accounting laws require (currently up to 8 years), even if you delete your account. In that case the order is kept without your name or email on the account.</li>
+          <li>Contact messages: for as long as needed to answer your enquiry.</li>
         </ul>
 
-        <h2 className="text-2xl font-bold text-black mt-8">3. Third-Party Payment Gateway (Razorpay)</h2>
+        <h2 className={h2}>6. Your Rights</h2>
+        <p>Under the DPDP Act you can:</p>
+        <ul className={list}>
+          <li>Ask for a summary of the personal data we hold about you.</li>
+          <li>Ask us to correct or update inaccurate data.</li>
+          <li>Delete your account yourself from your profile page, or ask us to erase your data (subject to the record keeping described above).</li>
+          <li>Withdraw consent for analytics at any time using &quot;Cookie Settings&quot;.</li>
+          <li>Raise a grievance with us, and if unresolved, with the Data Protection Board of India.</li>
+        </ul>
+        <p>To use any of these rights, contact the Grievance Officer below.</p>
+
+        <h2 className={h2}>7. Data Security</h2>
         <p>
-          We use Razorpay for processing payments. We/Razorpay do not store your card data on our servers. The data is encrypted through the Payment Card Industry Data Security Standard (PCI-DSS) when processing payment. Your purchase transaction data is only used as long as is necessary to complete your purchase transaction. After that is complete, your purchase transaction information is not saved.
-          For more insight, you may also want to read terms and conditions of Razorpay on <a href="https://razorpay.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">https://razorpay.com</a>.
+          Passwords are stored as one-way hashes, sessions use signed secure cookies, and access to customer data is
+          limited to staff who need it to fulfil orders. If a data breach affects you, we will inform you and the
+          authorities as required by law.
         </p>
 
-        <h2 className="text-2xl font-bold text-black mt-8">4. Data Security</h2>
-        <p>
-          We have put in place appropriate security measures to prevent your personal data from being accidentally lost, used, or accessed in an unauthorised way, altered, or disclosed. In addition, we limit access to your personal data to those employees, agents, contractors, and other third parties who have a business need to know.
-        </p>
-
-        <h2 className="text-2xl font-bold text-black mt-8">5. Cookies</h2>
-        <p>
-          Our website uses cookies to distinguish you from other users of our website. This helps us to provide you with a good experience when you browse our website and also allows us to improve our site. You can set your browser to refuse all or some browser cookies, but this may affect the functionality of our website.
-        </p>
-
-        <h2 className="text-2xl font-bold text-black mt-8">6. Contact Us</h2>
-        <p>If you have any questions about this privacy policy or our privacy practices, please contact us at:</p>
-        <div className="bg-gray-50 p-6 rounded-lg mt-4">
-          <p><strong>Sneha Furniture</strong></p>
-          <p>7, Saharanpur Rd, Patel Nagar</p>
-          <p>Dehradun, Uttarakhand 248001</p>
-          <p>Email: orders@snehafurniture.in</p>
-          <p>Phone: +91 96343 12102</p>
-        </div>
+        <h2 className={h2}>8. Grievance Officer and Contact</h2>
+        <GrievanceOfficer className="bg-gray-50 p-6 rounded-lg mt-4 space-y-1" />
       </div>
     </div>
   );

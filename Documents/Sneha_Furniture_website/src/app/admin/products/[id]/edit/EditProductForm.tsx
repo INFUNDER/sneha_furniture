@@ -1,12 +1,14 @@
 'use client';
 
+import type { Product } from '@prisma/client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import ImageUpload from '@/components/ImageUpload';
+import { PRODUCT_CATEGORIES } from '@/lib/site';
 
-export default function EditProductForm({ product }: { product: any }) {
+export default function EditProductForm({ product }: { product: Product }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -22,7 +24,7 @@ export default function EditProductForm({ product }: { product: any }) {
     finish: product.finish || '',
     warranty: product.warranty || '',
     stock: product.stock.toString(),
-    images: JSON.parse(product.images || '[]').join(', ')
+    images: JSON.parse(product.images || '[]').join(',')
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -38,11 +40,13 @@ export default function EditProductForm({ product }: { product: any }) {
       .split(',')
       .map((url: string) => url.trim())
       .filter((url: string) => url.length > 0);
+    if (imageArray.length === 0) {
+      setError('Please upload at least one product image.');
+      setLoading(false);
+      return;
+    }
 
-    const payload = {
-      ...formData,
-      images: imageArray.length > 0 ? imageArray : ['https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=800&q=80']
-    };
+    const payload = { ...formData, images: imageArray };
 
     try {
       const res = await fetch(`/api/products/${product.id}`, {
@@ -58,7 +62,7 @@ export default function EditProductForm({ product }: { product: any }) {
         const data = await res.json();
         setError(data.error || 'Failed to update product');
       }
-    } catch (err) {
+    } catch {
       setError('An unexpected error occurred.');
     } finally {
       setLoading(false);
@@ -100,11 +104,7 @@ export default function EditProductForm({ product }: { product: any }) {
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Category *</label>
               <select name="category" value={formData.category} onChange={handleChange} className="w-full border border-gray-300 rounded-sm px-4 py-2 focus:ring-1 focus:ring-primary outline-none">
-                <option value="Living Room">Living Room</option>
-                <option value="Bedroom">Bedroom</option>
-                <option value="Dining">Dining</option>
-                <option value="Office">Office</option>
-                <option value="Outdoor">Outdoor</option>
+                {PRODUCT_CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
             <div>
@@ -159,7 +159,7 @@ export default function EditProductForm({ product }: { product: any }) {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Product Images</label>
             <ImageUpload 
-              value={formData.images.split(',').filter(Boolean)} 
+              value={formData.images.split(',').map((u: string) => u.trim()).filter(Boolean)} 
               onChange={(urls) => setFormData({ ...formData, images: urls.join(',') })} 
             />
           </div>

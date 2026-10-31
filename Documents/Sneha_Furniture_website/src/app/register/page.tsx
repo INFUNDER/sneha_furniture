@@ -1,11 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { safeRedirectPath } from '@/lib/site';
 
 export default function RegisterPage() {
-  const router = useRouter();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -27,12 +26,12 @@ export default function RegisterPage() {
       if (res.ok) {
         const urlParams = new URLSearchParams(window.location.search);
         const callbackUrl = urlParams.get('callbackUrl');
-        window.location.href = callbackUrl || '/profile';
+        window.location.href = safeRedirectPath(callbackUrl);
       } else {
         const data = await res.json();
         setError(data.error || 'Registration failed');
       }
-    } catch (err) {
+    } catch {
       setError('An error occurred. Please try again.');
     } finally {
       setLoading(false);
@@ -80,7 +79,9 @@ export default function RegisterPage() {
               value={password}
               onChange={e => setPassword(e.target.value)}
               className="w-full border-b border-black py-4 outline-none text-sm font-bold uppercase tracking-widest bg-transparent placeholder-gray-400"
-              placeholder="PASSWORD"
+              placeholder="PASSWORD (MIN. 8 CHARACTERS)"
+              minLength={8}
+              autoComplete="new-password"
             />
           </div>
 
@@ -92,7 +93,7 @@ export default function RegisterPage() {
                 className="mt-1 w-4 h-4 rounded-none border-black text-black focus:ring-black accent-black"
               />
               <span className="text-xs font-bold uppercase tracking-widest opacity-80 group-hover:opacity-100 transition">
-                I agree to the <a href="/terms" className="border-b border-black pb-0.5">Terms of Service</a> and <a href="/privacy" className="border-b border-black pb-0.5">Privacy Policy</a>
+                I agree to the <Link href="/terms" className="border-b border-black pb-0.5">Terms of Service</Link> and <Link href="/privacy" className="border-b border-black pb-0.5">Privacy Policy</Link>
               </span>
             </label>
 

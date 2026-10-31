@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Upload, X } from 'lucide-react';
+import { productImage } from '@/lib/images';
 
 export default function ImageUpload({ 
   value = [], 
@@ -21,8 +22,7 @@ export default function ImageUpload({
     const apiKey = process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY;
 
     if (!cloudName || !apiKey) {
-      alert("Cloudinary is not configured. Falling back to placeholder image.");
-      onChange([...value, 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=800&q=80']);
+      alert("Image upload is not configured (Cloudinary keys missing).");
       return;
     }
 
@@ -31,6 +31,7 @@ export default function ImageUpload({
     try {
       // 1. Get secure signature from our backend
       const sigRes = await fetch('/api/upload', { method: 'POST' });
+      if (!sigRes.ok) throw new Error('Not allowed to upload');
       const { timestamp, signature } = await sigRes.json();
 
       // 2. Upload directly to Cloudinary
@@ -49,6 +50,8 @@ export default function ImageUpload({
       const data = await uploadRes.json();
       if (data.secure_url) {
         onChange([...value, data.secure_url]);
+      } else {
+        throw new Error(data.error?.message || 'Upload failed');
       }
     } catch (error) {
       console.error("Upload failed", error);
@@ -67,9 +70,10 @@ export default function ImageUpload({
       <div className="flex flex-wrap gap-4">
         {value.map((url, index) => (
           <div key={index} className="relative w-24 h-24 rounded-sm overflow-hidden border border-gray-200">
-            <img src={url} alt={`Uploaded ${index}`} className="w-full h-full object-cover" />
+            <img src={productImage(url, 200)} alt={`Uploaded ${index}`} className="w-full h-full object-cover" />
             <button 
               type="button" 
+              aria-label="Remove image"
               onClick={() => removeImage(index)}
               className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition"
             >

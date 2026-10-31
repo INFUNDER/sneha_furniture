@@ -1,10 +1,14 @@
+import { assertAdminPage } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Package, MapPin, CreditCard, User } from 'lucide-react';
+import { parseImages, productImage } from '@/lib/images';
+import { ArrowLeft, MapPin, CreditCard, User } from 'lucide-react';
 import OrderStatusDropdown from '../OrderStatusDropdown';
 
 export default async function AdminOrderDetailsPage({ params }: { params: Promise<{ id: string }> }) {
+  await assertAdminPage();
+
   const resolvedParams = await params;
   
   const order = await prisma.order.findUnique({
@@ -20,7 +24,7 @@ export default async function AdminOrderDetailsPage({ params }: { params: Promis
   if (!order) return notFound();
 
   let address = { name: '', street: '', city: '', state: '', pincode: '', phone: '' };
-  try { address = JSON.parse(order.shippingAddress); } catch (e) {}
+  try { address = JSON.parse(order.shippingAddress); } catch {}
 
   return (
     <div className="space-y-6">
@@ -96,8 +100,7 @@ export default async function AdminOrderDetailsPage({ params }: { params: Promis
             </thead>
             <tbody>
               {order.items.map((item) => {
-                const images = JSON.parse(item.product.images || '[]');
-                const coverImage = images[0] || 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=100&q=80';
+                const coverImage = productImage(parseImages(item.product.images)[0] || '', 200);
                 return (
                   <tr key={item.id} className="border-b border-gray-100 last:border-0 hover:bg-gray-50">
                     <td className="px-6 py-4">

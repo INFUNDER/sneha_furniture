@@ -12,7 +12,9 @@ import CartIcon from "@/components/CartIcon";
 import MarqueeBanner from "@/components/MarqueeBanner";
 import CookieBanner from "@/components/CookieBanner";
 import MobileNav from "@/components/MobileNav";
-import { GoogleAnalytics } from "@next/third-parties/google";
+import Analytics from "@/components/Analytics";
+import CookieSettingsButton from "@/components/CookieSettingsButton";
+import { ADDRESS, BRAND_NAME, CONTACT_EMAIL, PHONES, SITE_URL, SOCIAL } from "@/lib/site";
 import NextTopLoader from 'nextjs-toploader';
 
 const inter = Inter({
@@ -25,20 +27,27 @@ const outfit = Outfit({
   subsets: ["latin"],
 });
 
+const DESCRIPTION = `Shop sofas, beds, dining sets and living room furniture at ${BRAND_NAME}, Dehradun. Visit our showroom on Saharanpur Road or order online with free delivery.`;
+
 export const metadata: Metadata = {
-  title: "Sneha Furniture | Luxury Furniture in Dehradun",
-  description: "Shop premium quality living room, bedroom, and dining furniture at Sneha Furniture, Dehradun. Handcrafted Teak & Sheesham wood pieces.",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: `${BRAND_NAME} | Premium Furniture in Dehradun`,
+    template: `%s | ${BRAND_NAME}`,
+  },
+  description: DESCRIPTION,
+  alternates: { canonical: '/' },
   icons: {
     icon: '/icon.png',
   },
   openGraph: {
-    title: "Sneha Furniture | Luxury Furniture in Dehradun",
-    description: "Shop premium quality living room, bedroom, and dining furniture at Sneha Furniture, Dehradun. Handcrafted Teak & Sheesham wood pieces.",
-    url: "https://www.snehafurniture.in/",
-    siteName: "Sneha Furniture",
+    title: `${BRAND_NAME} | Premium Furniture in Dehradun`,
+    description: DESCRIPTION,
+    url: SITE_URL,
+    siteName: BRAND_NAME,
     images: [
       {
-        url: "https://www.snehafurniture.in/logo.png",
+        url: "/logo.png",
         width: 800,
         height: 600,
       },
@@ -81,21 +90,20 @@ export default function RootLayout({
                 __html: JSON.stringify({
                   "@context": "https://schema.org",
                   "@type": "FurnitureStore",
-                  "name": "Sneha Furniture",
-                  "url": "https://www.snehafurniture.in/",
-                  "logo": "https://www.snehafurniture.in/logo.png",
-                  "telephone": "+918755594915",
-                  "email": "snehafurnituresddn@gmail.com",
+                  "name": BRAND_NAME,
+                  "url": SITE_URL,
+                  "logo": `${SITE_URL}/logo.png`,
+                  "telephone": PHONES.map((p) => p.tel),
+                  "email": CONTACT_EMAIL,
                   "address": {
                     "@type": "PostalAddress",
-                    "addressLocality": "Dehradun",
-                    "addressRegion": "Uttarakhand",
+                    "streetAddress": ADDRESS.street,
+                    "addressLocality": ADDRESS.city,
+                    "addressRegion": ADDRESS.state,
+                    "postalCode": ADDRESS.pincode,
                     "addressCountry": "IN"
                   },
-                  "sameAs": [
-                    "https://www.facebook.com/share/1Hd1tiWFCt/?mibextid=wwXIfr",
-                    "https://www.instagram.com/snehafurniture.in?stkn=MTdkaGJzdGVydHRzag%3D%3D&utm_source=qr"
-                  ]
+                  "sameAs": [SOCIAL.facebook, SOCIAL.instagram]
                 })
               }}
             />
@@ -105,7 +113,7 @@ export default function RootLayout({
               <div className="flex items-center gap-4">
                 <MobileNav />
                 <Link href="/" className="text-2xl md:text-3xl font-black font-sans tracking-tight text-black uppercase">
-                  Sneha Furnitures
+                  {BRAND_NAME}
                 </Link>
               </div>
               <div className="flex items-center gap-8">
@@ -116,10 +124,10 @@ export default function RootLayout({
                   <Link href="/contact" className="hover:opacity-70 transition">Contact</Link>
                 </nav>
                 <div className="flex items-center gap-6 text-black">
-                  <Link href="/wishlist" className="text-sm font-bold uppercase tracking-wider hover:opacity-70 transition flex items-center gap-2">
+                  <Link href="/wishlist" aria-label="Wishlist" className="text-sm font-bold uppercase tracking-wider hover:opacity-70 transition flex items-center gap-2">
                     <Heart size={18} />
                   </Link>
-                  <Link href="/profile" className="text-sm font-bold uppercase tracking-wider hover:opacity-70 transition flex items-center gap-2">
+                  <Link href="/profile" aria-label="My account" className="text-sm font-bold uppercase tracking-wider hover:opacity-70 transition flex items-center gap-2">
                     <User size={18} />
                   </Link>
                   <div className="text-sm font-bold uppercase tracking-wider hover:opacity-70 transition">
@@ -139,8 +147,8 @@ export default function RootLayout({
             <div className="max-w-[1400px] mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-12 mb-12">
               {/* Brand Column */}
               <div className="flex flex-col gap-6 md:col-span-1">
-                <Image src="/logo.png" alt="Sneha Furnitures Logo" width={160} height={64} className="h-16 w-auto object-contain self-start" />
-                <h2 className="text-3xl font-black font-sans uppercase tracking-tight">SNEHA FURNITURES</h2>
+                <Image src="/logo.png" alt={`${BRAND_NAME} logo`} width={160} height={64} className="h-16 w-auto object-contain self-start" />
+                <h2 className="text-3xl font-black font-sans uppercase tracking-tight">{BRAND_NAME}</h2>
                 <p className="text-sm font-medium opacity-70 leading-relaxed">
                   Premium quality living room, bedroom, and dining furniture in Dehradun. Handcrafted luxury for your home.
                 </p>
@@ -158,15 +166,17 @@ export default function RootLayout({
               <div className="flex flex-col gap-4">
                 <h3 className="text-sm font-bold uppercase tracking-widest mb-2">Support</h3>
                 <Link href="/contact" className="text-sm font-medium opacity-70 hover:opacity-100 transition">Contact Us</Link>
-                <a href="mailto:snehafurnituresddn@gmail.com" className="text-sm font-medium opacity-70 hover:opacity-100 transition break-all">snehafurnituresddn@gmail.com</a>
-                <a href="tel:+918755594915" className="text-sm font-medium opacity-70 hover:opacity-100 transition">+91 87555 94915</a>
+                <a href={`mailto:${CONTACT_EMAIL}`} className="text-sm font-medium opacity-70 hover:opacity-100 transition break-all">{CONTACT_EMAIL}</a>
+                {PHONES.map((p) => (
+                  <a key={p.tel} href={`tel:${p.tel}`} className="text-sm font-medium opacity-70 hover:opacity-100 transition">{p.display}</a>
+                ))}
               </div>
 
               {/* Social */}
               <div className="flex flex-col gap-4">
                 <h3 className="text-sm font-bold uppercase tracking-widest mb-2">Social</h3>
-                <a href="https://www.instagram.com/snehafurniture.in?stkn=MTdkaGJzdGVydHRzag%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer" className="text-sm font-medium opacity-70 hover:opacity-100 transition">Instagram</a>
-                <a href="https://www.facebook.com/share/1Hd1tiWFCt/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" className="text-sm font-medium opacity-70 hover:opacity-100 transition">Facebook</a>
+                <a href={SOCIAL.instagram} target="_blank" rel="noopener noreferrer" className="text-sm font-medium opacity-70 hover:opacity-100 transition">Instagram</a>
+                <a href={SOCIAL.facebook} target="_blank" rel="noopener noreferrer" className="text-sm font-medium opacity-70 hover:opacity-100 transition">Facebook</a>
               </div>
 
               {/* Legal */}
@@ -176,12 +186,13 @@ export default function RootLayout({
                 <Link href="/terms" className="text-sm font-medium opacity-70 hover:opacity-100 transition">Terms & Conditions</Link>
                 <Link href="/refund" className="text-sm font-medium opacity-70 hover:opacity-100 transition">Refund Policy</Link>
                 <Link href="/shipping" className="text-sm font-medium opacity-70 hover:opacity-100 transition">Shipping Policy</Link>
+                <CookieSettingsButton className="text-left text-sm font-medium opacity-70 hover:opacity-100 transition" />
               </div>
             </div>
             
             <div className="max-w-[1400px] mx-auto px-6 pt-8 border-t border-black/10 flex flex-col md:flex-row justify-between items-center gap-4">
               <p className="text-xs font-bold uppercase tracking-widest opacity-40">
-                &copy; {new Date().getFullYear()} SNEHA FURNITURES. ALL RIGHTS RESERVED.
+                &copy; {new Date().getFullYear()} {BRAND_NAME}. ALL RIGHTS RESERVED.
               </p>
             </div>
           </footer>
@@ -190,7 +201,7 @@ export default function RootLayout({
           <CookieBanner />
           </WishlistProvider>
         </CartProvider>
-        <GoogleAnalytics gaId="G-PZ4QKENKZJ" />
+        <Analytics gaId="G-PZ4QKENKZJ" />
       </body>
     </html>
   );

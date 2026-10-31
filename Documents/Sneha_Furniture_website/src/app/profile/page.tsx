@@ -3,20 +3,43 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
+type ProfileUser = { id: string; name: string; email: string; role: string };
+type ProfileOrder = { id: string; createdAt: string; totalAmount: number; orderStatus: string };
+
 export default function ProfilePage() {
-  const [user, setUser] = useState<any>(null);
-  const [orders, setOrders] = useState<any[]>([]);
+  const [user, setUser] = useState<ProfileUser | null>(null);
+  const [orders, setOrders] = useState<ProfileOrder[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'details' | 'orders'>('details');
+  const [loadError, setLoadError] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+
+  const handleDeleteAccount = async () => {
+    if (!window.confirm('Are you sure you want to permanently delete your account? Your wishlist and reviews will be deleted. Past orders are kept only as required for tax records, without your name or email.')) return;
+    setDeleting(true);
+    const res = await fetch('/api/auth/delete-account', { method: 'DELETE' });
+    if (res.ok) {
+      window.location.href = '/';
+    } else {
+      setDeleting(false);
+      alert('Sorry, we could not delete your account. Please try again or contact us.');
+    }
+  };
 
   useEffect(() => {
     Promise.all([
       fetch('/api/auth/me').then(res => res.json()),
       fetch('/api/orders/me').then(res => res.json())
     ]).then(([userData, ordersData]) => {
-      if (userData.user) setUser(userData.user);
+      if (!userData.user) {
+        // Session expired or invalid
+        window.location.href = '/login?callbackUrl=/profile';
+        return;
+      }
+      setUser(userData.user);
       if (ordersData.orders) setOrders(ordersData.orders);
-    }).finally(() => setLoading(false));
+    }).catch(() => setLoadError(true))
+      .finally(() => setLoading(false));
   }, []);
 
   const handleLogout = async () => {
@@ -25,7 +48,8 @@ export default function ProfilePage() {
   };
 
   if (loading) return <div className="p-40 text-center font-black uppercase tracking-widest text-xl">LOADING...</div>;
-  if (!user) return null;
+  if (loadError) return <div className="p-40 text-center font-black uppercase tracking-widest text-xl">Could not load your profile. Please refresh the page.</div>;
+  if (!user) return <div className="p-40 text-center font-black uppercase tracking-widest text-xl">Redirecting to sign in...</div>;
 
   return (
     <div className="max-w-[1400px] mx-auto px-6 py-24 bg-white min-h-screen">
@@ -90,17 +114,13 @@ export default function ProfilePage() {
 
                 <div className="pt-12 border-t border-black">
                   <h3 className="text-lg font-black uppercase tracking-widest text-red-600 mb-4">Danger Zone</h3>
-                  <p className="text-sm font-bold opacity-70 mb-6">Permanently delete your account and all associated data. This action cannot be undone.</p>
+                  <p className="text-sm font-bold opacity-70 mb-6">Permanently delete your account. Your wishlist and reviews are deleted; past orders are kept without your name or email, as required for tax records. This cannot be undone.</p>
                   <button 
-                    onClick={async () => {
-                      if(window.confirm('Are you sure you want to permanently delete your account and all your data? This cannot be undone.')) {
-                        await fetch('/api/auth/delete-account', { method: 'DELETE' });
-                        window.location.href = '/register';
-                      }
-                    }}
-                    className="border border-red-600 text-red-600 px-6 py-3 rounded-full text-sm font-bold uppercase tracking-widest hover:bg-red-600 hover:text-white transition"
+                    onClick={handleDeleteAccount}
+                    disabled={deleting}
+                    className="border border-red-600 text-red-600 px-6 py-3 rounded-full text-sm font-bold uppercase tracking-widest hover:bg-red-600 hover:text-white transition disabled:opacity-50"
                   >
-                    Delete My Account
+                    {deleting ? 'Deleting...' : 'Delete My Account'}
                   </button>
                 </div>
               </div>

@@ -1,8 +1,10 @@
 import { NextResponse } from 'next/server';
-import crypto from 'crypto';
 import { prisma } from '@/lib/prisma';
 import { sendOrderConfirmationEmail } from '@/lib/email';
+import { toPaise, verifyHmac } from '@/lib/razorpay';
 
+// Backup path for marking orders paid, in case the customer closes the tab
+// before the checkout page calls /api/payments/razorpay/verify.
 export async function POST(req: Request) {
   try {
     const rawBody = await req.text();
@@ -15,45 +17,33 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Webhook secret missing' }, { status: 500 });
     }
 
-    if (!signature) {
-      return NextResponse.json({ error: 'Signature missing' }, { status: 400 });
-    }
-
-    // Cryptographically verify the signature using HMAC SHA256
-    const expectedSignature = crypto
-      .createHmac('sha256', webhookSecret)
-      .update(rawBody)
-      .digest('hex');
-
-    if (expectedSignature !== signature) {
+    if (!signature || !verifyHmac(rawBody, signature, webhookSecret)) {
       return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
     }
 
-    // Parse the verified payload
     const payload = JSON.parse(rawBody);
 
-    // Handle the payment.captured event
     if (payload.event === 'payment.captured') {
       const paymentEntity = payload.payload.payment.entity;
-      
-      // We expect the order_id to be passed in the notes during order creation
+      // Set in notes when the Razorpay order is created in /api/orders.
       const localOrderId = paymentEntity.notes?.local_order_id;
 
       if (localOrderId) {
-        // Mark the order as PAID in our database
-        const updatedOrder = await prisma.order.update({
-          where: { id: localOrderId },
-          data: { 
-            paymentStatus: 'PAID',
-            orderStatus: 'PROCESSING'
-          },
-          include: { user: true }
-        });
+        const order = await prisma.order.findUnique({ where: { id: localOrderId }, include: { user: true } });
 
-        console.log(`Successfully verified and updated order: ${localOrderId}`);
+        if (order && Number(paymentEntity.amount) === toPaise(order.totalAmount)) {
+          // updateMany with a status filter makes this idempotent: Razorpay retries webhooks.
+          const updated = await prisma.order.updateMany({
+            where: { id: order.id, paymentStatus: { not: 'PAID' } },
+            data: { paymentStatus: 'PAID', orderStatus: 'PROCESSING' },
+          });
 
-        // Send Confirmation Email
-        await sendOrderConfirmationEmail(updatedOrder.user.email, updatedOrder);
+          if (updated.count > 0) {
+            await sendOrderConfirmationEmail(order.user.email, order.user.name, { ...order, paymentStatus: 'PAID' });
+          }
+        } else {
+          console.error(`Webhook payment for ${localOrderId} did not match an order or amount`);
+        }
       }
     }
 

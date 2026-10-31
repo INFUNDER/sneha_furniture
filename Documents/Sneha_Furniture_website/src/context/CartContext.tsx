@@ -8,6 +8,7 @@ type CartItem = {
   price: number;
   image: string;
   quantity: number;
+  stock?: number;
 };
 
 type CartContextType = {
@@ -19,18 +20,52 @@ type CartContextType = {
   total: number;
 };
 
+type ServerProduct = { id: string; title: string; price: number; discountPrice: number | null; stock: number };
+
 const CartContext = createContext<CartContextType | undefined>(undefined);
+
+const capQuantity = (quantity: number, stock?: number) =>
+  stock === undefined ? quantity : Math.max(1, Math.min(quantity, stock));
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    const stored = localStorage.getItem('sneha-cart');
-    if (stored) {
-      try { setItems(JSON.parse(stored)); } catch (e) {}
+    let stored: CartItem[] = [];
+    try {
+      stored = JSON.parse(localStorage.getItem('sneha-cart') || '[]');
+    } catch {
+      stored = [];
     }
+    // localStorage is only readable after hydration, so the cart has to be loaded in an effect.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setItems(stored);
     setIsLoaded(true);
+
+    if (stored.length === 0) return;
+
+    // Refresh prices and stock: the saved cart can be days old.
+    fetch(`/api/products?ids=${stored.map((i) => encodeURIComponent(i.id)).join(',')}`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data: { products: ServerProduct[] } | null) => {
+        if (!data) return;
+        const byId = new Map(data.products.map((p) => [p.id, p]));
+        setItems((current) =>
+          current.flatMap((item) => {
+            const p = byId.get(item.id);
+            if (!p || p.stock < 1) return [];
+            return [{
+              ...item,
+              title: p.title,
+              price: p.discountPrice ?? p.price,
+              stock: p.stock,
+              quantity: capQuantity(item.quantity, p.stock),
+            }];
+          })
+        );
+      })
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -43,9 +78,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setItems((current) => {
       const existing = current.find(i => i.id === item.id);
       if (existing) {
-        return current.map(i => i.id === item.id ? { ...i, quantity: i.quantity + quantity } : i);
+        return current.map(i => i.id === item.id ? { ...i, ...item, quantity: capQuantity(i.quantity + quantity, item.stock) } : i);
       }
-      return [...current, { ...item, quantity }];
+      return [...current, { ...item, quantity: capQuantity(quantity, item.stock) }];
     });
   };
 
@@ -55,7 +90,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const updateQuantity = (id: string, quantity: number) => {
     if (quantity < 1) return;
-    setItems(current => current.map(i => i.id === id ? { ...i, quantity } : i));
+    setItems(current => current.map(i => i.id === id ? { ...i, quantity: capQuantity(quantity, i.stock) } : i));
   };
 
   const clearCart = () => setItems([]);

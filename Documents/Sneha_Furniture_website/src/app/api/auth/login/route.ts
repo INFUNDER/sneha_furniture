@@ -1,16 +1,22 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
-import { encrypt } from '@/lib/auth';
-import { cookies } from 'next/headers';
+import { setSessionCookie } from '@/lib/auth';
+import { rateLimit, clientIp } from '@/lib/rateLimit';
 
 export async function POST(request: Request) {
   try {
-    const { email: rawEmail, password } = await request.json();
-    const email = rawEmail.toLowerCase();
+    const body = await request.json().catch(() => ({}));
+    const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : '';
+    const password = typeof body.password === 'string' ? body.password : '';
 
     if (!email || !password) {
       return NextResponse.json({ error: 'Email and password are required' }, { status: 400 });
+    }
+
+    const ip = clientIp(request);
+    if (!rateLimit(`login:ip:${ip}`, 20, 15 * 60 * 1000) || !rateLimit(`login:email:${email}`, 8, 15 * 60 * 1000)) {
+      return NextResponse.json({ error: 'Too many attempts. Please try again in 15 minutes.' }, { status: 429 });
     }
 
     const user = await prisma.user.findUnique({ where: { email } });
@@ -26,17 +32,7 @@ export async function POST(request: Request) {
     }
 
     const sessionPayload = { id: user.id, email: user.email, role: user.role, name: user.name };
-    const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
-    const session = await encrypt(sessionPayload);
-
-    const cookieStore = await cookies();
-    cookieStore.set('session', session, {
-      expires,
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-    });
+    await setSessionCookie(sessionPayload);
 
     return NextResponse.json({ user: sessionPayload }, { status: 200 });
   } catch (error) {

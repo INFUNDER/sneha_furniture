@@ -1,41 +1,46 @@
 import { NextResponse } from 'next/server';
-import { getSession } from '@/lib/auth';
+import bcrypt from 'bcryptjs';
+import { randomBytes } from 'crypto';
+import { getSession, clearSessionCookie } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { cookies } from 'next/headers';
 
 export async function DELETE() {
   try {
     const session = await getSession();
-    
-    if (!session || !session.userId) {
+
+    if (!session?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const userId = session.userId;
+    const userId = session.id;
+    const orderCount = await prisma.order.count({ where: { userId } });
+    const unusablePassword = await bcrypt.hash(randomBytes(32).toString('hex'), 10);
 
-    // Delete reviews and wishlist items
-    await prisma.review.deleteMany({ where: { userId } });
-    await prisma.wishlistItem.deleteMany({ where: { userId } });
+    await prisma.$transaction(async (tx) => {
+      await tx.review.deleteMany({ where: { userId } });
+      await tx.wishlistItem.deleteMany({ where: { userId } });
 
-    // Orders might be kept for business/tax records. 
-    // For compliance and simplicity, we delete the user's orders and their items.
-    const userOrders = await prisma.order.findMany({ where: { userId } });
-    const orderIds = userOrders.map(o => o.id);
-    
-    if (orderIds.length > 0) {
-      await prisma.orderItem.deleteMany({ where: { orderId: { in: orderIds } } });
-      await prisma.order.deleteMany({ where: { userId } });
-    }
+      if (orderCount === 0) {
+        await tx.user.delete({ where: { id: userId } });
+      } else {
+        // Orders must be kept for GST/tax records, so the account is anonymised
+        // instead of deleted: it can no longer sign in or be identified by email.
+        await tx.user.update({
+          where: { id: userId },
+          data: {
+            name: 'Deleted user',
+            email: `deleted-${userId}@deleted.invalid`,
+            password: unusablePassword,
+            role: 'CUSTOMER',
+          },
+        });
+      }
+    });
 
-    // Finally delete user
-    await prisma.user.delete({ where: { id: userId } });
-
-    // Clear session
-    const cookieStore = await cookies();
-    cookieStore.set('session', '', { maxAge: -1 });
+    await clearSessionCookie();
 
     return NextResponse.json({ success: true });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Delete account error:', error);
     return NextResponse.json({ error: 'Failed to delete account' }, { status: 500 });
   }

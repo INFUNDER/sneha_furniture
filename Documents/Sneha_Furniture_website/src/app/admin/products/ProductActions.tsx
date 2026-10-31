@@ -19,9 +19,10 @@ export default function ProductActions({ id }: { id: string }) {
       if (res.ok) {
         router.refresh();
       } else {
-        alert('Failed to delete product');
+        const data = await res.json().catch(() => ({}));
+        alert(data.error || 'Failed to delete product');
       }
-    } catch (e) {
+    } catch {
       alert('An error occurred');
     } finally {
       setIsDeleting(false);

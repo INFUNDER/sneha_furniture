@@ -2,11 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     const session = await getSession();
     if (!session) {
-      return NextResponse.json({ items: [] }, { status: 401 });
+      // Logged-out visitors simply have an empty wishlist (no 401 noise on every page).
+      return NextResponse.json({ items: [] }, { status: 200 });
     }
 
     const wishlistItems = await prisma.wishlistItem.findMany({
@@ -14,8 +15,8 @@ export async function GET(req: NextRequest) {
       select: { productId: true }
     });
 
-    return NextResponse.json({ 
-      items: wishlistItems.map(item => item.productId) 
+    return NextResponse.json({
+      items: wishlistItems.map(item => item.productId)
     }, { status: 200 });
 
   } catch (error) {
@@ -33,7 +34,7 @@ export async function POST(req: NextRequest) {
 
     const { productId } = await req.json();
 
-    if (!productId) {
+    if (typeof productId !== 'string' || !productId) {
       return NextResponse.json({ error: 'Product ID required' }, { status: 400 });
     }
 

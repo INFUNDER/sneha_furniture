@@ -1,6 +1,12 @@
 import Link from 'next/link';
+import { assertAdminPage } from '@/lib/auth';
+import LogoutButton from '@/components/LogoutButton';
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  // proxy.ts already redirects non-admins; this re-checks the role in the database.
+  // Each admin page repeats the check because layouts and pages render in parallel.
+  await assertAdminPage();
+
   return (
     <div className="flex min-h-screen bg-white">
       {/* Sidebar */}
@@ -14,7 +20,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <Link href="/admin/orders" className="hover:opacity-50 transition">Orders</Link>
           <Link href="/admin/users" className="hover:opacity-50 transition">Users</Link>
           <div className="flex-1"></div>
-          <Link href="/logout" className="text-red-600 hover:opacity-50 transition border-t border-black pt-6">Logout</Link>
+          <LogoutButton className="text-left uppercase text-red-600 hover:opacity-50 transition border-t border-black pt-6" />
         </nav>
       </aside>
 

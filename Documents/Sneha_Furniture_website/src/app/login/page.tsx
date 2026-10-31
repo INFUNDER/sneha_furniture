@@ -1,11 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { safeRedirectPath } from '@/lib/site';
 
 export default function LoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -26,12 +25,12 @@ export default function LoginPage() {
       if (res.ok) {
         const urlParams = new URLSearchParams(window.location.search);
         const callbackUrl = urlParams.get('callbackUrl');
-        window.location.href = callbackUrl || '/profile';
+        window.location.href = safeRedirectPath(callbackUrl);
       } else {
         const data = await res.json();
         setError(data.error || 'Login failed');
       }
-    } catch (err) {
+    } catch {
       setError('An error occurred. Please try again.');
     } finally {
       setLoading(false);
