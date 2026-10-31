@@ -1,11 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import { useRouter } from 'next/navigation';
 import Script from 'next/script';
+import Image from 'next/image';
+import { Lock } from 'lucide-react';
 import { BRAND_NAME, ONLINE_PAYMENTS_ENABLED } from '@/lib/site';
+import { productImage } from '@/lib/images';
+import { displayTitle, formatPrice } from '@/lib/format';
+import EmptyState from '@/components/EmptyState';
+import PageHeader from '@/components/PageHeader';
 
 type RazorpaySuccess = { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string };
 type RazorpayInstance = { open: () => void };
@@ -15,7 +20,6 @@ declare global {
   }
 }
 
-const inputClass = 'border-b border-black py-4 outline-none text-sm font-bold uppercase tracking-widest bg-transparent placeholder-gray-400';
 
 export default function CheckoutPage() {
   const { items, total, clearCart } = useCart();
@@ -34,14 +38,7 @@ export default function CheckoutPage() {
   });
 
   if (items.length === 0) {
-    return (
-      <div className="max-w-[1400px] mx-auto px-6 py-40 text-center bg-white min-h-[70vh] flex flex-col items-center justify-center">
-        <h1 className="text-4xl font-black uppercase tracking-widest mb-8">Your Cart is Empty</h1>
-        <Link href="/shop" className="inline-flex items-center justify-center border border-black rounded-full px-12 py-4 text-sm font-bold tracking-widest uppercase hover:bg-black hover:text-white transition h-14">
-          CONTINUE SHOPPING
-        </Link>
-      </div>
-    );
+    return <EmptyState title="Your bag is empty" body="Add a piece to your bag to check out." href="/shop" cta="Explore the collection" />;
   }
 
   const finish = (orderId: string) => {
@@ -115,78 +112,98 @@ export default function CheckoutPage() {
     }
   };
 
+  const field = (key: keyof typeof address, label: string, props: React.InputHTMLAttributes<HTMLInputElement>, wide = false) => (
+    <label className={wide ? 'md:col-span-2' : ''}>
+      <span className="field-label">{label}</span>
+      <input
+        required
+        className="field"
+        value={address[key]}
+        onChange={(e) => setAddress({ ...address, [key]: props.inputMode === 'numeric' ? e.target.value.replace(key === 'phone' ? /[^\d+]/g : /\D/g, '') : e.target.value })}
+        {...props}
+      />
+    </label>
+  );
+
   return (
-    <div className="max-w-[1400px] mx-auto px-6 py-24 bg-white min-h-screen">
+    <div className="pb-24">
       {ONLINE_PAYMENTS_ENABLED && <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />}
 
-      <h1 className="text-5xl font-black uppercase tracking-tight mb-16">CHECKOUT</h1>
+      <PageHeader eyebrow="Secure checkout" title="Almost home." intro="Tell us where your furniture is going. We will call you to confirm a delivery date." />
 
-      <form onSubmit={handleCheckout} className="flex flex-col lg:flex-row gap-24">
-
-        <div className="flex-[2] space-y-16">
-          <div>
-            <h2 className="text-2xl font-black uppercase tracking-widest mb-8 border-b border-black pb-4">Shipping Details</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <input required type="text" autoComplete="name" aria-label="Full name" placeholder="FULL NAME" maxLength={100} className={inputClass} value={address.name} onChange={e => setAddress({...address, name: e.target.value})} />
-              <input required type="tel" autoComplete="tel" inputMode="numeric" aria-label="Phone number" placeholder="10-DIGIT MOBILE NUMBER" pattern="(\+?91)?[6-9][0-9]{9}" title="Enter a valid 10-digit Indian mobile number" className={inputClass} value={address.phone} onChange={e => setAddress({...address, phone: e.target.value.replace(/[^\d+]/g, '')})} />
-              <input required type="text" autoComplete="street-address" aria-label="Street address" placeholder="STREET ADDRESS" maxLength={300} className={`${inputClass} md:col-span-2`} value={address.street} onChange={e => setAddress({...address, street: e.target.value})} />
-              <input required type="text" autoComplete="address-level2" aria-label="City" placeholder="CITY" className={inputClass} value={address.city} onChange={e => setAddress({...address, city: e.target.value})} />
-              <input required type="text" autoComplete="address-level1" aria-label="State" placeholder="STATE" className={inputClass} value={address.state} onChange={e => setAddress({...address, state: e.target.value})} />
-              <input required type="text" autoComplete="postal-code" inputMode="numeric" aria-label="Pincode" placeholder="6-DIGIT PINCODE" pattern="[1-9][0-9]{5}" maxLength={6} title="Enter a valid 6-digit pincode" className={`${inputClass} md:col-span-2`} value={address.pincode} onChange={e => setAddress({...address, pincode: e.target.value.replace(/\D/g, '')})} />
+      <form onSubmit={handleCheckout} className="max-w-[1440px] mx-auto px-5 md:px-10 pt-12 grid lg:grid-cols-[1.4fr_1fr] gap-12 lg:gap-16 items-start">
+        <div className="space-y-14">
+          <section>
+            <h2 className="font-display text-3xl flex items-baseline gap-4"><span className="text-brass text-xl">01</span> Delivery details</h2>
+            <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8">
+              {field('name', 'Full name', { autoComplete: 'name', maxLength: 100 }, true)}
+              {field('phone', 'Mobile number', { type: 'tel', autoComplete: 'tel', inputMode: 'numeric', placeholder: '10-digit mobile number', pattern: '(\\+?91)?[6-9][0-9]{9}', title: 'Enter a valid 10-digit Indian mobile number' })}
+              {field('pincode', 'Pincode', { autoComplete: 'postal-code', inputMode: 'numeric', placeholder: '6 digits', pattern: '[1-9][0-9]{5}', maxLength: 6, title: 'Enter a valid 6-digit pincode' })}
+              {field('street', 'Street address', { autoComplete: 'street-address', maxLength: 300, placeholder: 'House, street, area' }, true)}
+              {field('city', 'City', { autoComplete: 'address-level2' })}
+              {field('state', 'State', { autoComplete: 'address-level1' })}
             </div>
-          </div>
+          </section>
 
-          <div>
-            <h2 className="text-2xl font-black uppercase tracking-widest mb-8 border-b border-black pb-4">Payment Method</h2>
-            <div className="space-y-4 font-bold uppercase tracking-widest text-sm">
-              <label className={`flex items-center gap-4 p-6 border transition cursor-pointer ${paymentMethod === 'COD' ? 'border-black bg-black text-white' : 'border-gray-200 text-black hover:border-black'}`}>
-                <input type="radio" name="payment" value="COD" checked={paymentMethod === 'COD'} onChange={() => setPaymentMethod('COD')} className="sr-only" />
-                <span>Cash on Delivery</span>
+          <section>
+            <h2 className="font-display text-3xl flex items-baseline gap-4"><span className="text-brass text-xl">02</span> Payment</h2>
+            <div className="mt-8 grid gap-3" role="radiogroup" aria-label="Payment method">
+              <label className={`flex items-center gap-4 rounded-2xl border p-5 cursor-pointer transition-colors ${paymentMethod === 'COD' ? 'border-ink bg-[#FBF8F3]' : 'border-line hover:border-stone'}`}>
+                <input type="radio" name="payment" value="COD" checked={paymentMethod === 'COD'} onChange={() => setPaymentMethod('COD')} className="accent-[#1F1A17] w-4 h-4" />
+                <span>
+                  <span className="block font-semibold">Cash on delivery</span>
+                  <span className="block text-sm text-stone">Pay when your furniture arrives.</span>
+                </span>
               </label>
               {ONLINE_PAYMENTS_ENABLED ? (
-                <label className={`flex items-center gap-4 p-6 border transition cursor-pointer ${paymentMethod === 'ONLINE' ? 'border-black bg-black text-white' : 'border-gray-200 text-black hover:border-black'}`}>
-                  <input type="radio" name="payment" value="ONLINE" checked={paymentMethod === 'ONLINE'} onChange={() => setPaymentMethod('ONLINE')} className="sr-only" />
-                  <span>Online Payment (UPI, Cards, Netbanking)</span>
+                <label className={`flex items-center gap-4 rounded-2xl border p-5 cursor-pointer transition-colors ${paymentMethod === 'ONLINE' ? 'border-ink bg-[#FBF8F3]' : 'border-line hover:border-stone'}`}>
+                  <input type="radio" name="payment" value="ONLINE" checked={paymentMethod === 'ONLINE'} onChange={() => setPaymentMethod('ONLINE')} className="accent-[#1F1A17] w-4 h-4" />
+                  <span>
+                    <span className="block font-semibold">Pay online</span>
+                    <span className="block text-sm text-stone">UPI, cards and netbanking via Razorpay.</span>
+                  </span>
                 </label>
               ) : (
-                <p className="text-xs text-gray-500 normal-case tracking-normal font-medium">Online payment is coming soon. For now, please pay on delivery.</p>
+                <p className="text-sm text-stone">Online payment is coming soon.</p>
               )}
             </div>
-          </div>
+          </section>
         </div>
 
-        <div className="flex-1">
-          <div className="sticky top-32 border border-black p-8">
-            <h2 className="text-2xl font-black uppercase tracking-widest mb-8 border-b border-black pb-4">Order Summary</h2>
-            <div className="space-y-6 mb-12">
-              {items.map(item => (
-                <div key={item.id} className="flex justify-between items-center text-sm font-bold uppercase tracking-widest">
-                  <div className="flex items-center gap-4">
-                    <span className="opacity-50">{item.quantity}X</span>
-                    <span className="line-clamp-1 max-w-[150px]">{item.title}</span>
-                  </div>
-                  <span>₹{(item.price * item.quantity).toLocaleString('en-IN')}</span>
-                </div>
-              ))}
+        <aside className="card p-8 lg:sticky lg:top-28">
+          <h2 className="font-display text-3xl">Your order</h2>
+          <ul className="mt-6 space-y-4">
+            {items.map(item => (
+              <li key={item.id} className="flex items-center gap-4">
+                <span className="relative w-14 h-16 shrink-0 overflow-hidden rounded-lg bg-sand">
+                  {item.image && <Image src={productImage(item.image, 160)} alt="" fill sizes="56px" className="object-cover" unoptimized />}
+                  <span className="absolute -top-1.5 -right-1.5 min-w-5 h-5 px-1 rounded-full bg-ink text-ivory text-[10px] font-semibold grid place-items-center">{item.quantity}</span>
+                </span>
+                <span className="flex-1 min-w-0 text-sm line-clamp-2">{displayTitle(item.title)}</span>
+                <span className="text-sm font-semibold">{formatPrice(item.price * item.quantity)}</span>
+              </li>
+            ))}
+          </ul>
+
+          <dl className="mt-6 pt-6 border-t border-line space-y-3 text-sm">
+            <div className="flex justify-between"><dt className="text-stone">Subtotal</dt><dd>{formatPrice(total)}</dd></div>
+            <div className="flex justify-between"><dt className="text-stone">Delivery</dt><dd className="text-brass font-semibold">Free</dd></div>
+            <div className="flex justify-between items-baseline pt-4 border-t border-line">
+              <dt className="font-semibold">Total</dt>
+              <dd className="font-display text-3xl">{formatPrice(total)}</dd>
             </div>
+          </dl>
+          <p className="text-xs text-stone mt-2">Inclusive of all taxes. Final prices are confirmed when you place the order.</p>
 
-            <div className="border-t border-black pt-6 space-y-4 text-sm font-bold uppercase tracking-widest">
-               <div className="flex justify-between"><span className="opacity-50">Subtotal</span><span>₹{total.toLocaleString('en-IN')}</span></div>
-               <div className="flex justify-between"><span className="opacity-50">Delivery</span><span>FREE</span></div>
-               <div className="flex justify-between font-black text-xl mt-4"><span>Total</span><span>₹{total.toLocaleString('en-IN')}</span></div>
-               <p className="text-xs font-medium normal-case tracking-normal opacity-50">Inclusive of all taxes. Final prices are confirmed when you place the order.</p>
-            </div>
+          {error && (
+            <p role="alert" className="mt-6 rounded-xl border border-red-700/40 bg-red-50 text-red-800 p-4 text-sm">{error}</p>
+          )}
 
-            {error && (
-              <p role="alert" className="mt-8 border border-red-600 text-red-600 p-4 text-xs font-bold uppercase tracking-widest">{error}</p>
-            )}
-
-            <button type="submit" disabled={loading} className="w-full mt-8 bg-black text-white h-14 rounded-full font-bold text-sm tracking-widest uppercase hover:bg-black/80 transition disabled:opacity-50 disabled:cursor-not-allowed">
-              {loading ? 'PROCESSING...' : paymentMethod === 'ONLINE' ? 'PAY NOW' : 'PLACE ORDER'}
-            </button>
-          </div>
-        </div>
-
+          <button type="submit" disabled={loading} className="btn btn-primary w-full mt-6">
+            {loading ? 'Placing order…' : paymentMethod === 'ONLINE' ? 'Pay now' : 'Place order'}
+          </button>
+          <p className="mt-4 flex items-center justify-center gap-2 text-xs text-stone"><Lock size={12} aria-hidden="true" /> Your details are only used to deliver this order.</p>
+        </aside>
       </form>
     </div>
   );

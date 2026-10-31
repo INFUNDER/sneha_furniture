@@ -1,8 +1,8 @@
 import { getSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import MinimalProductCard from '@/components/MinimalProductCard';
-import Link from 'next/link';
-import { Heart } from 'lucide-react';
+import EmptyState from '@/components/EmptyState';
+import PageHeader from '@/components/PageHeader';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,19 +11,12 @@ export default async function WishlistPage() {
 
   if (!session) {
     return (
-      <div className="max-w-[1400px] mx-auto px-6 py-24 min-h-[60vh] flex flex-col items-center justify-center text-center">
-        <Heart size={64} className="mb-6 opacity-20" />
-        <h1 className="text-4xl font-black uppercase tracking-tight mb-4">Your Wishlist</h1>
-        <p className="text-gray-500 max-w-md mx-auto mb-8 font-medium">
-          Please log in to view or add items to your wishlist.
-        </p>
-        <Link 
-          href="/login?callbackUrl=/wishlist" 
-          className="bg-black text-white px-8 py-3 rounded-full font-bold text-sm tracking-widest uppercase hover:bg-black/80 transition"
-        >
-          Log In
-        </Link>
-      </div>
+      <EmptyState
+        title="Your wishlist"
+        body="Sign in to save the pieces you love and come back to them any time."
+        href="/login?callbackUrl=/wishlist"
+        cta="Sign in"
+      />
     );
   }
 
@@ -33,33 +26,29 @@ export default async function WishlistPage() {
     orderBy: { createdAt: 'desc' }
   });
 
-  return (
-    <div className="max-w-[1400px] mx-auto px-6 py-12 md:py-24">
-      <div className="flex flex-col gap-2 mb-12 border-b border-black pb-8">
-        <h1 className="text-5xl font-black uppercase tracking-tight">Your Wishlist</h1>
-        <p className="text-sm font-bold uppercase tracking-widest opacity-50">
-          {wishlistItems.length} {wishlistItems.length === 1 ? 'Item' : 'Items'} Saved
-        </p>
-      </div>
+  if (wishlistItems.length === 0) {
+    return (
+      <EmptyState
+        title="Nothing saved yet"
+        body="Tap the heart on any piece to keep it here for later."
+        href="/shop"
+        cta="Explore the collection"
+      />
+    );
+  }
 
-      {wishlistItems.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-24 text-center border border-dashed border-gray-300">
-          <Heart size={48} className="mb-4 opacity-20" />
-          <p className="text-xl font-bold uppercase tracking-widest opacity-50 mb-6">Your wishlist is empty</p>
-          <Link 
-            href="/shop" 
-            className="bg-black text-white px-8 py-3 rounded-full font-bold text-sm tracking-widest uppercase hover:bg-black/80 transition"
-          >
-            Explore Furniture
-          </Link>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-16">
-          {wishlistItems.map((item) => (
-            <MinimalProductCard key={item.id} product={item.product} />
-          ))}
-        </div>
-      )}
+  return (
+    <div className="pb-24">
+      <PageHeader eyebrow="Saved for later" title="Your wishlist">
+        <p className="text-sm text-stone">{wishlistItems.length} {wishlistItems.length === 1 ? 'piece' : 'pieces'}</p>
+      </PageHeader>
+      <div className="max-w-[1440px] mx-auto px-5 md:px-10 pt-12 grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-4 md:gap-x-6 gap-y-12">
+        {wishlistItems.map((item, i) => (
+          <div key={item.id} data-reveal style={{ '--reveal-delay': `${(i % 4) * 80}ms` } as React.CSSProperties}>
+            <MinimalProductCard product={item.product} />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

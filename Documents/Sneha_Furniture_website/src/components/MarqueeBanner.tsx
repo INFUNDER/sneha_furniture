@@ -1,30 +1,25 @@
-'use client';
+const ITEMS = ['Free delivery on every order', 'Cash on delivery available', 'Visit our showroom on Saharanpur Road, Dehradun'];
 
+// Slim announcement strip above the header.
 export default function MarqueeBanner() {
-  const text = "FREE DELIVERY ON ALL ORDERS • CASH ON DELIVERY AVAILABLE • VISIT OUR SHOWROOM IN DEHRADUN";
+  const row = (key: string) => (
+    <div key={key} className="flex shrink-0 items-center">
+      {[...ITEMS, ...ITEMS].map((t, i) => (
+        <span key={i} className="flex items-center gap-10 pr-10">
+          {t}
+          <span className="w-1 h-1 rounded-full bg-brass-light" />
+        </span>
+      ))}
+    </div>
+  );
 
   return (
-    <div className="w-full bg-black text-white py-2 overflow-hidden flex items-center relative z-50">
-      <p className="sr-only">{text}</p>
-      <div className="marquee-content whitespace-nowrap text-xs font-bold uppercase tracking-widest flex" aria-hidden="true">
-        <span className="px-8">{text}</span>
-        <span className="px-8">{text}</span>
-        <span className="px-8">{text}</span>
-        <span className="px-8">{text}</span>
+    <div className="w-full bg-ink text-ivory/90 h-9 overflow-hidden flex items-center text-[11px] font-medium tracking-[0.2em] uppercase">
+      <p className="sr-only">{ITEMS.join('. ')}</p>
+      <div className="marquee-track flex w-max" aria-hidden="true">
+        {row('a')}
+        {row('b')}
       </div>
-      <style jsx global>{`
-        @keyframes marquee {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-        .marquee-content {
-          animation: marquee 20s linear infinite;
-          min-width: 200%;
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .marquee-content { animation: none; }
-        }
-      `}</style>
     </div>
   );
 }

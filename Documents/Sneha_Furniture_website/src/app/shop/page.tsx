@@ -32,8 +32,6 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
   });
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12">
-      <ShopUI key={initialCategory} initialProducts={products} categories={categories} initialCategory={initialCategory} />
-    </div>
+    <ShopUI key={initialCategory} initialProducts={products} categories={categories.map((c) => c.category)} initialCategory={initialCategory} />
   );
 }

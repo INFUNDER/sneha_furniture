@@ -1,19 +1,21 @@
 import Link from 'next/link';
+import ArmchairMark from '@/components/ArmchairMark';
 
 export default function NotFound() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[70vh] bg-white px-6 text-center">
-      <h1 className="text-9xl font-black uppercase tracking-tighter text-black/10">404</h1>
-      <h2 className="text-4xl font-black uppercase tracking-widest mt-4">Page Not Found</h2>
-      <p className="mt-6 text-sm font-medium opacity-70 max-w-md mx-auto leading-relaxed">
-        The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.
+    <div className="min-h-[75vh] flex flex-col items-center justify-center px-5 py-24 text-center">
+      <div className="relative">
+        <p className="font-display text-[clamp(8rem,22vw,16rem)] leading-none text-sand select-none" aria-hidden="true">404</p>
+        <ArmchairMark className="draw-once absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-24 md:w-32 text-brass" strokeWidth={1.6} />
+      </div>
+      <h1 className="font-display text-5xl md:text-6xl leading-none mt-4">This room is empty</h1>
+      <p className="mt-5 max-w-md text-stone leading-relaxed">
+        The page you are looking for may have moved, or the piece is no longer in our collection.
       </p>
-      <Link 
-        href="/"
-        className="mt-12 inline-flex items-center justify-center bg-black text-white rounded-full px-12 py-5 text-sm font-bold tracking-widest uppercase hover:bg-black/80 transition"
-      >
-        RETURN HOME
-      </Link>
+      <div className="mt-10 flex flex-wrap justify-center gap-4">
+        <Link href="/shop" className="btn btn-primary">Browse the collection</Link>
+        <Link href="/" className="btn btn-outline">Back to home</Link>
+      </div>
     </div>
   );
 }

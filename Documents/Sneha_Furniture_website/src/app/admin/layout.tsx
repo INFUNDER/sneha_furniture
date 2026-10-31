@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { assertAdminPage } from '@/lib/auth';
 import LogoutButton from '@/components/LogoutButton';
+import BrandMark from '@/components/BrandMark';
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   // proxy.ts already redirects non-admins; this re-checks the role in the database.
@@ -12,7 +13,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       {/* Sidebar */}
       <aside className="w-64 bg-white border-r border-black flex flex-col">
         <div className="h-24 flex items-center px-8 border-b border-black">
-          <Link href="/" className="text-xl font-black uppercase tracking-tight">SNEHA ADMIN</Link>
+          <Link href="/" className="flex items-center gap-3 text-xl font-black uppercase tracking-tight"><BrandMark className="h-6" /> Admin</Link>
         </div>
         <nav className="p-8 flex flex-col space-y-6 text-sm font-bold uppercase tracking-widest flex-1">
           <Link href="/admin" className="hover:opacity-50 transition">Dashboard</Link>

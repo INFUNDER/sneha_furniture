@@ -58,51 +58,57 @@ export default function ReviewSection({
     }
   };
 
-  const renderStars = (ratingValue: number) => {
-    const stars = [];
-    for (let i = 1; i <= 5; i++) {
-      stars.push(
-        <Star
-          key={i}
-          aria-hidden="true"
-          className={`w-5 h-5 ${i <= ratingValue ? 'fill-black text-black' : 'text-gray-300'}`}
-        />
-      );
-    }
-    return stars;
-  };
+  const renderStars = (ratingValue: number) =>
+    [1, 2, 3, 4, 5].map((i) => (
+      <Star 
+        key={i} 
+        aria-hidden="true"
+        size={15}
+        className={i <= ratingValue ? 'fill-brass text-brass' : 'text-line'}
+      />
+    ));
 
   const notice = (text: string) => (
-    <div className="bg-gray-100 p-8 text-center">
-      <p className="text-sm font-bold uppercase tracking-widest opacity-50">{text}</p>
+    <div className="card p-8">
+      <p className="text-stone leading-relaxed">{text}</p>
     </div>
   );
 
+  const avg = reviews.length ? reviews.reduce((a, r) => a + r.rating, 0) / reviews.length : null;
+
   return (
-    <div className="mt-24 border-t border-black pt-16">
-      <h2 className="text-4xl font-black uppercase tracking-tight text-black mb-12">Customer Reviews</h2>
+    <div className="grid lg:grid-cols-[0.8fr_1.2fr] gap-12 lg:gap-20">
+      <div>
+        <p className="eyebrow">Reviews</p>
+        <h2 className="font-display text-5xl leading-none mt-5">What owners say</h2>
+        {avg !== null && (
+          <p className="mt-6 flex items-center gap-3">
+            <span className="font-display text-5xl">{avg.toFixed(1)}</span>
+            <span className="flex flex-col gap-1">
+              <span className="flex" role="img" aria-label={`${avg.toFixed(1)} out of 5 stars`}>{renderStars(Math.round(avg))}</span>
+              <span className="text-xs text-stone">{reviews.length} verified {reviews.length === 1 ? 'review' : 'reviews'}</span>
+            </span>
+          </p>
+        )}
 
-      <div className="flex flex-col lg:flex-row gap-16">
-        {/* Review Form */}
-        <div className="w-full lg:w-1/3">
-          <h3 className="text-2xl font-bold uppercase tracking-widest mb-6">Write a Review</h3>
-
+        <div className="mt-10">
           {reviewState === 'login' && (
-            <div className="bg-gray-100 p-8 text-center">
-              <p className="text-sm font-bold uppercase tracking-widest opacity-50 mb-4">Please log in to leave a review</p>
-              <Link href={`/login?callbackUrl=${encodeURIComponent(pathname)}`} className="inline-block border border-black px-6 py-3 text-xs font-bold uppercase tracking-widest hover:bg-black hover:text-white transition">
-                Log In
+            <div className="card p-8">
+              <p className="text-stone leading-relaxed mb-6">Bought this piece? Sign in to share your experience with other customers.</p>
+              <Link href={`/login?callbackUrl=${encodeURIComponent(pathname)}`} className="btn btn-outline">
+                Sign in to review
               </Link>
             </div>
           )}
-          {reviewState === 'not-purchased' && notice('Reviews can be written by customers who have ordered this product')}
-          {reviewState === 'reviewed' && notice('Thank you, you have already reviewed this product')}
+          {reviewState === 'not-purchased' && notice('Reviews can be written by customers who have ordered this piece, so every review here comes from a real owner.')}
+          {reviewState === 'reviewed' && notice('Thank you, you have already reviewed this piece.')}
           {reviewState === 'can-review' && (
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {error && <div role="alert" className="text-red-500 font-bold text-xs uppercase">{error}</div>}
+            <form onSubmit={handleSubmit} className="card p-8 space-y-6">
+              <h3 className="font-display text-3xl">Write a review</h3>
+              {error && <p role="alert" className="text-sm text-red-700">{error}</p>}
 
               <fieldset>
-                <legend className="block text-xs font-bold uppercase tracking-widest opacity-50 mb-2">Rating</legend>
+                <legend className="field-label mb-3">Your rating</legend>
                 <div className="flex gap-1">
                   {[1, 2, 3, 4, 5].map((i) => (
                     <button
@@ -111,66 +117,61 @@ export default function ReviewSection({
                       onClick={() => setRating(i)}
                       aria-label={`${i} star${i > 1 ? 's' : ''}`}
                       aria-pressed={rating === i}
+                      className="p-1 transition-transform hover:scale-110"
                     >
-                      <Star className={`w-5 h-5 ${i <= rating ? 'fill-black text-black' : 'text-gray-300'}`} />
+                      <Star size={24} strokeWidth={1.4} className={i <= rating ? 'fill-brass text-brass' : 'text-stone/50'} />
                     </button>
                   ))}
                 </div>
               </fieldset>
 
               <div>
-                <label htmlFor="review-comment" className="block text-xs font-bold uppercase tracking-widest opacity-50 mb-2">Your Review</label>
-                <textarea
+                <label htmlFor="review-comment" className="field-label">Your review</label>
+                <textarea 
                   id="review-comment"
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
                   maxLength={2000}
-                  className="w-full border border-black p-4 text-sm font-medium outline-none min-h-[120px]"
-                  placeholder="What did you think about this product?"
+                  rows={4}
+                  className="field resize-none"
+                  placeholder="How does it look and feel in your home?"
                   required
                 />
               </div>
 
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full bg-black text-white h-14 rounded-full font-bold text-sm tracking-widest uppercase hover:bg-black/80 transition disabled:opacity-50"
-              >
-                {isSubmitting ? 'SUBMITTING...' : 'SUBMIT REVIEW'}
+              <button type="submit" disabled={isSubmitting} className="btn btn-primary w-full">
+                {isSubmitting ? 'Submitting…' : 'Submit review'}
               </button>
             </form>
           )}
         </div>
+      </div>
 
-        {/* Reviews List */}
-        <div className="w-full lg:w-2/3">
-          {reviews.length === 0 ? (
-            <p className="text-sm font-bold uppercase tracking-widest opacity-50">No reviews yet.</p>
-          ) : (
-            <div className="space-y-8">
-              {reviews.map((review) => (
-                <div key={review.id} className="border-b border-gray-200 pb-8 last:border-0">
-                  <div className="flex justify-between items-start mb-4">
-                    <div>
-                      <h4 className="font-bold text-lg">{review.user?.name || 'Anonymous'}</h4>
-                      <p className="text-xs font-bold uppercase tracking-widest opacity-30 mt-1">
-                        Verified buyer · {new Date(review.createdAt).toLocaleDateString('en-IN')}
-                      </p>
-                    </div>
-                    <div className="flex" role="img" aria-label={`${review.rating} out of 5 stars`}>
-                      {renderStars(review.rating)}
-                    </div>
-                  </div>
-                  {review.comment && (
-                    <p className="text-gray-700 leading-relaxed text-sm">
-                      {review.comment}
+      <div>
+        {reviews.length === 0 ? (
+          <div className="h-full min-h-[200px] rounded-2xl border border-dashed border-line grid place-items-center p-10 text-center">
+            <p className="font-display text-3xl text-stone">No reviews yet.<br />Be the first owner to share.</p>
+          </div>
+        ) : (
+          <ul className="divide-y divide-line border-y border-line">
+            {reviews.map((review) => (
+              <li key={review.id} className="py-8">
+                <div className="flex justify-between items-start gap-4 mb-4">
+                  <div>
+                    <p className="font-display text-2xl">{review.user?.name || 'Customer'}</p>
+                    <p className="text-xs text-stone mt-1">
+                      Verified buyer · {new Date(review.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
                     </p>
-                  )}
+                  </div>
+                  <div className="flex" role="img" aria-label={`${review.rating} out of 5 stars`}>
+                    {renderStars(review.rating)}
+                  </div>
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
+                {review.comment && <p className="text-stone leading-relaxed">{review.comment}</p>}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+import PolicyLayout from '@/components/PolicyLayout';
 import type { Metadata } from 'next';
 import GrievanceOfficer from '@/components/GrievanceOfficer';
 import { BRAND_NAME } from '@/lib/site';
@@ -7,14 +8,10 @@ export const metadata: Metadata = {
   description: `How ${BRAND_NAME} collects, uses and protects your personal data.`,
 };
 
-const h2 = 'text-2xl font-bold text-black mt-8';
-const list = 'list-disc pl-6 space-y-2';
 
 export default function PrivacyPolicy() {
   return (
-    <div className="max-w-4xl mx-auto px-6 py-20">
-      <h1 className="text-4xl font-black mb-8">Privacy Policy</h1>
-      <div className="space-y-6 text-gray-700 leading-relaxed">
+    <PolicyLayout title="Privacy Policy" current="/privacy">
         <p><strong>Last updated:</strong> October 2026</p>
 
         <p>
@@ -24,8 +21,8 @@ export default function PrivacyPolicy() {
           Technology Act, 2000.
         </p>
 
-        <h2 className={h2}>1. Data We Collect</h2>
-        <ul className={list}>
+        <h2>1. Data We Collect</h2>
+        <ul>
           <li><strong>Account data:</strong> your name, email address and a securely hashed password when you create an account.</li>
           <li><strong>Order data:</strong> delivery name, address, phone number, the products you order, amounts and payment status.</li>
           <li><strong>Messages:</strong> your name, email, optional phone number and message when you use our contact form.</li>
@@ -34,8 +31,8 @@ export default function PrivacyPolicy() {
         </ul>
         <p>We do not collect or store your card, UPI or bank details. Online payments, when available, are handled entirely by Razorpay.</p>
 
-        <h2 className={h2}>2. Why We Use Your Data</h2>
-        <ul className={list}>
+        <h2>2. Why We Use Your Data</h2>
+        <ul>
           <li>To create and manage your account and keep you signed in.</li>
           <li>To process, deliver and support your orders, including order confirmation emails.</li>
           <li>To reply to your enquiries.</li>
@@ -43,9 +40,9 @@ export default function PrivacyPolicy() {
           <li>With your consent, to understand how the website is used so we can improve it.</li>
         </ul>
 
-        <h2 className={h2}>3. Who We Share It With</h2>
+        <h2>3. Who We Share It With</h2>
         <p>We do not sell your personal data. We share it only with service providers who process it on our behalf:</p>
-        <ul className={list}>
+        <ul>
           <li><strong>Supabase</strong> (database hosting) and <strong>Render</strong> (website hosting).</li>
           <li><strong>Resend</strong> (sending order and contact emails).</li>
           <li><strong>Cloudinary</strong> (hosting product images; no customer data).</li>
@@ -55,23 +52,23 @@ export default function PrivacyPolicy() {
         </ul>
         <p>Some of these providers may store data outside India, with safeguards required under applicable law.</p>
 
-        <h2 className={h2}>4. Cookies</h2>
+        <h2>4. Cookies</h2>
         <p>
           We use one essential cookie to keep you signed in, and your browser&apos;s local storage to remember your cart and
           cookie choice. Google Analytics cookies are only set if you click &quot;Accept&quot; on the cookie banner. You
           can change your choice at any time using &quot;Cookie Settings&quot; in the website footer.
         </p>
 
-        <h2 className={h2}>5. How Long We Keep It</h2>
-        <ul className={list}>
+        <h2>5. How Long We Keep It</h2>
+        <ul>
           <li>Account data: until you delete your account.</li>
           <li>Order records: for as long as tax and accounting laws require (currently up to 8 years), even if you delete your account. In that case the order is kept without your name or email on the account.</li>
           <li>Contact messages: for as long as needed to answer your enquiry.</li>
         </ul>
 
-        <h2 className={h2}>6. Your Rights</h2>
+        <h2>6. Your Rights</h2>
         <p>Under the DPDP Act you can:</p>
-        <ul className={list}>
+        <ul>
           <li>Ask for a summary of the personal data we hold about you.</li>
           <li>Ask us to correct or update inaccurate data.</li>
           <li>Delete your account yourself from your profile page, or ask us to erase your data (subject to the record keeping described above).</li>
@@ -80,16 +77,15 @@ export default function PrivacyPolicy() {
         </ul>
         <p>To use any of these rights, contact the Grievance Officer below.</p>
 
-        <h2 className={h2}>7. Data Security</h2>
+        <h2>7. Data Security</h2>
         <p>
           Passwords are stored as one-way hashes, sessions use signed secure cookies, and access to customer data is
           limited to staff who need it to fulfil orders. If a data breach affects you, we will inform you and the
           authorities as required by law.
         </p>
 
-        <h2 className={h2}>8. Grievance Officer and Contact</h2>
-        <GrievanceOfficer className="bg-gray-50 p-6 rounded-lg mt-4 space-y-1" />
-      </div>
-    </div>
+        <h2>8. Grievance Officer and Contact</h2>
+        <GrievanceOfficer className="card p-6 not-prose space-y-1" />
+    </PolicyLayout>
   );
 }

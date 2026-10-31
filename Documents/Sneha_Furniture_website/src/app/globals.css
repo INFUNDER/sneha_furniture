@@ -1,52 +1,324 @@
 @import "tailwindcss";
 
+/* ------------------------------------------------------------------
+   Sneha Furniture design system: warm editorial
+   ivory linen backgrounds, walnut ink text, brass accents,
+   Cormorant Garamond display + Manrope body, arch motif.
+------------------------------------------------------------------- */
+
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-border: var(--border);
-  --color-ring: var(--ring);
-  
+  --color-background: var(--ivory);
+  --color-foreground: var(--ink);
+  --color-primary: var(--ink);
+  --color-primary-foreground: var(--ivory);
+
+  --color-ivory: var(--ivory);
+  --color-linen: var(--linen);
+  --color-sand: var(--sand);
+  --color-ink: var(--ink);
+  --color-stone: var(--stone);
+  --color-brass: var(--brass);
+  --color-brass-soft: var(--brass-soft);
+  --color-brass-light: var(--brass-light);
+  --color-line: var(--line);
+  --color-border: var(--line);
+  --color-ring: var(--ink);
+
   --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-heading: var(--font-heading), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display), 'Times New Roman', serif;
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 :root {
-  --background: #FFFFFF;
-  --foreground: #000000;
-  
-  --primary: #000000;
-  --primary-foreground: #FFFFFF;
-  
-  --card: #FFFFFF;
-  --card-foreground: #000000;
-
-  --border: #E5E5E5;
-  --ring: #000000;
+  --ivory: #F6F1EA;      /* page background */
+  --linen: #EFE7DC;      /* alternate sections */
+  --sand: #E6DACB;       /* image placeholders, chips */
+  --ink: #1F1A17;        /* text, primary buttons (15:1 on ivory) */
+  --stone: #5E544B;      /* muted text (6.5:1 on ivory) */
+  --brass: #7A5230;      /* accent text & hover (6:1 on ivory) */
+  --brass-soft: #B08A5B; /* decorative lines only, never text */
+  --brass-light: #C9A57A;/* accent on dark backgrounds (7.5:1 on ink) */
+  --line: #DDD2C3;       /* hairlines & borders */
 }
 
-
+html {
+  background-color: var(--ivory);
+}
 
 body {
-  background-color: var(--background);
-  color: var(--foreground);
+  background-color: var(--ivory);
+  color: var(--ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--ink);
+  color: var(--ivory);
+}
+
+:focus-visible {
+  outline: 2px solid var(--brass);
+  outline-offset: 3px;
+}
+
+/* Lenis smooth scrolling */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+@layer components {
+  .font-display {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+
+  /* Small uppercase label above headings */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--brass);
+  }
+  .eyebrow::before {
+    content: '';
+    width: 2rem;
+    height: 1px;
+    background: var(--brass-soft);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    min-height: 3.25rem;
+    padding: 0 2rem;
+    border-radius: 999px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 300ms var(--ease-out-soft), color 300ms var(--ease-out-soft),
+      border-color 300ms var(--ease-out-soft), transform 300ms var(--ease-out-soft);
+  }
+  .btn:active { transform: scale(0.98); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-primary { background: var(--ink); color: var(--ivory); }
+  .btn-primary:hover:not(:disabled) { background: var(--brass); }
+  .btn-outline { border: 1px solid var(--ink); color: var(--ink); }
+  .btn-outline:hover:not(:disabled) { background: var(--ink); color: var(--ivory); }
+  .btn-light { background: var(--ivory); color: var(--ink); }
+  .btn-light:hover:not(:disabled) { background: var(--brass-light); }
+
+  /* Text link with an underline that draws in on hover */
+  .link-draw {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 400ms var(--ease-out-soft), color 300ms;
+    padding-bottom: 2px;
+  }
+  .link-draw:hover, .link-draw[aria-current='page'] { background-size: 100% 1px; }
+
+  .field {
+    width: 100%;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    padding: 0.875rem 0;
+    font-size: 1rem;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 300ms;
+  }
+  .field::placeholder { color: var(--stone); opacity: 0.75; }
+  .field:focus { border-bottom-color: var(--ink); }
+  .field-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--stone);
+  }
+
+  .card {
+    background: #FBF8F3;
+    border: 1px solid var(--line);
+    border-radius: 1.25rem;
+  }
+
+  /* Arch-topped frame, the brand's signature shape */
+  .arch { border-radius: 999px 999px 1rem 1rem; overflow: hidden; }
+
+  .prose-policy { color: var(--stone); line-height: 1.8; }
+  .prose-policy h2 {
+    font-family: var(--font-display);
+    font-size: 1.875rem;
+    color: var(--ink);
+    margin-top: 3rem;
+    margin-bottom: 0.5rem;
+  }
+  .prose-policy strong { color: var(--ink); font-weight: 600; }
+  .prose-policy a { color: var(--brass); text-decoration: underline; text-underline-offset: 3px; }
+  .prose-policy ul { list-style: disc; padding-left: 1.5rem; }
+  .prose-policy li + li { margin-top: 0.5rem; }
+  .prose-policy > * + * { margin-top: 1.25rem; }
 }
 
 @layer utilities {
-  .glass {
-    @apply bg-white/70 dark:bg-black/70 backdrop-blur-md border border-white/20 dark:border-white/10;
-  }
-  
   .hide-scrollbar {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
   .hide-scrollbar::-webkit-scrollbar {
     display: none;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Scroll reveal (driven by components/motion/MotionProvider.tsx)
+------------------------------------------------------------------- */
+.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 1s var(--ease-out-soft), transform 1.1s var(--ease-out-soft);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.js [data-reveal='image'] {
+  /* The observed element keeps its full box; IntersectionObserver ignores fully clipped targets. */
+  opacity: 1;
+  transform: none;
+}
+.js [data-reveal='image'] > * {
+  clip-path: inset(100% 0 0 0);
+  transform: scale(1.12);
+  transform-origin: 50% 100%;
+  transition: clip-path 1.3s var(--ease-out-soft), transform 1.8s var(--ease-out-soft);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.js [data-reveal][data-visible='true'] { opacity: 1; transform: none; }
+.js [data-reveal='image'][data-visible='true'] > * { clip-path: inset(0 0 0 0); transform: scale(1); }
+
+/* Split headline: each line slides up from a mask */
+.split-line { display: block; overflow: hidden; padding-bottom: 0.08em; }
+.js .split-line > span {
+  display: inline-block;
+  transform: translateY(105%);
+  transition: transform 1.2s var(--ease-out-soft);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.js [data-visible='true'] .split-line > span { transform: none; }
+
+/* Endless marquee */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track { animation: marquee 40s linear infinite; }
+
+/* ------------------------------------------------------------------
+   Intro loader: armchair line drawing (see components/IntroLoader.tsx).
+   Pure CSS so it plays before hydration; hidden on repeat visits by
+   the data-intro attribute set in the <head> script.
+------------------------------------------------------------------- */
+@property --intro-pct {
+  syntax: '<integer>';
+  initial-value: 0;
+  inherits: false;
+}
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  background: var(--ivory);
+  animation: intro-lift 0.9s var(--ease-out-soft) 2.5s forwards;
+}
+html[data-intro='seen'] .intro { display: none; }
+.intro svg path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: intro-draw 1.1s var(--ease-out-soft) forwards;
+  animation-delay: var(--d, 0s);
+}
+.intro-chair { animation: intro-out 0.6s var(--ease-out-soft) 1.25s forwards; }
+.intro-mono {
+  opacity: 0;
+  transform: scale(0.92);
+  filter: blur(6px);
+  animation: intro-in 0.8s var(--ease-out-soft) 1.35s forwards;
+}
+.intro-word {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: intro-fade 0.8s var(--ease-out-soft) 1.55s forwards;
+}
+.intro-count {
+  font-variant-numeric: tabular-nums;
+  counter-reset: pct var(--intro-pct);
+  animation: intro-count 2.3s var(--ease-out-soft) forwards;
+}
+.intro-count::after { content: counter(pct) '%'; }
+.intro-bar { transform-origin: left; transform: scaleX(0); animation: intro-bar 2.3s var(--ease-out-soft) forwards; }
+
+@keyframes intro-draw { to { stroke-dashoffset: 0; } }
+@keyframes intro-fade { to { opacity: 1; transform: none; } }
+@keyframes intro-out { to { opacity: 0; transform: scale(1.06); filter: blur(4px); } }
+@keyframes intro-in { to { opacity: 1; transform: none; filter: blur(0); } }
+@keyframes intro-count { to { --intro-pct: 100; } }
+@keyframes intro-bar { to { transform: scaleX(1); } }
+@keyframes intro-lift {
+  to { transform: translateY(-100%); visibility: hidden; }
+}
+
+/* Armchair that draws itself once; inside a [data-reveal] it waits until scrolled into view */
+.draw-once path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: intro-draw 1.2s var(--ease-out-soft) forwards;
+  animation-delay: var(--d, 0s);
+}
+.js [data-reveal] .draw-once path { animation-play-state: paused; }
+.js [data-reveal][data-visible='true'] .draw-once path { animation-play-state: running; }
+
+/* Small armchair used by route loading states */
+.chair-loop path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: chair-loop 2.4s var(--ease-out-soft) infinite;
+  animation-delay: var(--d, 0s);
+}
+@keyframes chair-loop {
+  0% { stroke-dashoffset: 1; }
+  45%, 70% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: -1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .intro { animation-delay: 0.4s !important; }
+  .js [data-reveal], .js [data-reveal='image'] > *, .js .split-line > span {
+    opacity: 1; transform: none; clip-path: none;
   }
 }

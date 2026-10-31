@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import AuthLayout from '@/components/AuthLayout';
 import { safeRedirectPath } from '@/lib/site';
 
 export default function LoginPage() {
@@ -38,55 +39,29 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white px-6 py-24">
-      <div className="w-full max-w-lg">
-        <h1 className="text-5xl font-black font-sans text-center mb-16 uppercase tracking-tight">SIGN IN</h1>
-        
-        {error && (
-          <div className="border border-black p-4 text-sm font-bold uppercase tracking-widest mb-8 text-center bg-black text-white">
-            {error}
-          </div>
-        )}
+    <AuthLayout eyebrow="Welcome back" title={<>Sign <em className="text-brass">in</em></>}>
+      {error && (
+        <p role="alert" className="mb-8 rounded-xl border border-red-700/40 bg-red-50 text-red-800 p-4 text-sm">{error}</p>
+      )}
 
-        <form onSubmit={handleLogin} className="space-y-12">
-          <div>
-            <input 
-              type="email" 
-              required
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              className="w-full border-b border-black py-4 outline-none text-sm font-bold uppercase tracking-widest bg-transparent placeholder-gray-400"
-              placeholder="EMAIL ADDRESS"
-            />
-          </div>
-          
-          <div>
-            <input 
-              type="password" 
-              required
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              className="w-full border-b border-black py-4 outline-none text-sm font-bold uppercase tracking-widest bg-transparent placeholder-gray-400"
-              placeholder="PASSWORD"
-            />
-          </div>
+      <form onSubmit={handleLogin} className="space-y-8">
+        <label className="block">
+          <span className="field-label">Email address</span>
+          <input type="email" required autoComplete="email" value={email} onChange={e => setEmail(e.target.value)} className="field" />
+        </label>
+        <label className="block">
+          <span className="field-label">Password</span>
+          <input type="password" required autoComplete="current-password" value={password} onChange={e => setPassword(e.target.value)} className="field" />
+        </label>
+        <button type="submit" disabled={loading} className="btn btn-primary w-full">
+          {loading ? 'Signing in…' : 'Sign in'}
+        </button>
+      </form>
 
-          <button 
-            type="submit" 
-            disabled={loading}
-            className="w-full bg-black text-white py-4 rounded-full font-bold text-sm tracking-widest uppercase hover:bg-black/80 transition disabled:opacity-50"
-          >
-            {loading ? 'AUTHENTICATING...' : 'SIGN IN'}
-          </button>
-        </form>
-
-        <div className="mt-12 text-center text-sm font-bold uppercase tracking-widest">
-          <span className="opacity-50">NEW HERE? </span>
-          <Link href="/register" className="border-b border-black hover:opacity-70 transition pb-1">
-            CREATE ACCOUNT
-          </Link>
-        </div>
-      </div>
-    </div>
+      <p className="mt-10 text-sm text-stone">
+        New to Sneha Furniture?{' '}
+        <Link href="/register" className="link-draw text-ink font-semibold">Create an account</Link>
+      </p>
+    </AuthLayout>
   );
 }

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Send } from 'lucide-react';
 
-const fieldClass = 'w-full border-b border-black py-4 outline-none text-sm font-bold uppercase tracking-widest bg-transparent placeholder-gray-400';
+
 
 export default function ContactForm() {
   const [form, setForm] = useState({ name: '', email: '', phone: '', message: '', b_address: '' });
@@ -36,9 +36,11 @@ export default function ContactForm() {
 
   if (status === 'sent') {
     return (
-      <p role="status" className="border border-black p-6 text-sm font-bold uppercase tracking-widest">
-        Thank you! Your message has been sent. We will get back to you soon.
-      </p>
+      <div role="status" className="py-10 text-center">
+        <p className="font-display text-4xl">Thank you.</p>
+        <p className="mt-3 text-stone">Your message is on its way. We will reply within one working day.</p>
+        <button type="button" onClick={() => setStatus('idle')} className="mt-8 link-draw text-sm font-semibold">Send another message</button>
+      </div>
     );
   }
 
@@ -47,16 +49,29 @@ export default function ContactForm() {
       {/* Honeypot field for spam protection */}
       <input type="text" name="b_address" value={form.b_address} onChange={e => setForm({ ...form, b_address: e.target.value })} style={{ display: 'none' }} tabIndex={-1} autoComplete="off" aria-hidden="true" />
 
-      <input type="text" required maxLength={100} aria-label="Your name" placeholder="Your Name" className={fieldClass} value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} />
-      <input type="email" required aria-label="Your email" placeholder="Your Email" className={fieldClass} value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} />
-      <input type="tel" aria-label="Your phone (optional)" placeholder="Phone (optional)" className={fieldClass} value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} />
-      <textarea required minLength={5} maxLength={5000} aria-label="Your message" placeholder="Your Message" rows={4} className={`${fieldClass} resize-none`} value={form.message} onChange={e => setForm({ ...form, message: e.target.value })}></textarea>
+      <div className="grid sm:grid-cols-2 gap-8">
+        <label className="block">
+          <span className="field-label">Your name</span>
+          <input type="text" required maxLength={100} autoComplete="name" className="field" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} />
+        </label>
+        <label className="block">
+          <span className="field-label">Phone (optional)</span>
+          <input type="tel" autoComplete="tel" className="field" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} />
+        </label>
+      </div>
+      <label className="block">
+        <span className="field-label">Email</span>
+        <input type="email" required autoComplete="email" className="field" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} />
+      </label>
+      <label className="block">
+        <span className="field-label">Message</span>
+        <textarea required minLength={5} maxLength={5000} rows={4} className="field resize-none" value={form.message} onChange={e => setForm({ ...form, message: e.target.value })}></textarea>
+      </label>
 
-      {error && <p role="alert" className="text-red-600 text-xs font-bold uppercase tracking-widest">{error}</p>}
+      {error && <p role="alert" className="rounded-xl border border-red-700/40 bg-red-50 text-red-800 p-4 text-sm">{error}</p>}
 
-      <button type="submit" disabled={status === 'sending'} className="w-full bg-black text-white h-14 rounded-full font-bold text-sm tracking-widest uppercase hover:bg-black/80 transition flex items-center justify-center gap-3 disabled:opacity-50">
-        <span>{status === 'sending' ? 'Sending...' : 'Send Message'}</span>
-        <Send size={16} />
+      <button type="submit" disabled={status === 'sending'} className="btn btn-primary w-full sm:w-auto">
+        {status === 'sending' ? 'Sending…' : 'Send message'} <Send size={15} />
       </button>
     </form>
   );

@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import PageHeader from '@/components/PageHeader';
+import Loading from '@/app/loading';
+import { formatPrice } from '@/lib/format';
 
 type ProfileUser = { id: string; name: string; email: string; role: string };
 type ProfileOrder = { id: string; createdAt: string; totalAmount: number; orderStatus: string };
@@ -10,7 +13,7 @@ export default function ProfilePage() {
   const [user, setUser] = useState<ProfileUser | null>(null);
   const [orders, setOrders] = useState<ProfileOrder[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'details' | 'orders'>('details');
+  const [activeTab, setActiveTab] = useState<'details' | 'orders'>('orders');
   const [loadError, setLoadError] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
@@ -47,132 +50,103 @@ export default function ProfilePage() {
     window.location.href = '/login';
   };
 
-  if (loading) return <div className="p-40 text-center font-black uppercase tracking-widest text-xl">LOADING...</div>;
-  if (loadError) return <div className="p-40 text-center font-black uppercase tracking-widest text-xl">Could not load your profile. Please refresh the page.</div>;
-  if (!user) return <div className="p-40 text-center font-black uppercase tracking-widest text-xl">Redirecting to sign in...</div>;
+  if (loading) return <Loading />;
+  if (loadError) return <p className="min-h-[60vh] grid place-items-center text-stone px-5 text-center">Could not load your profile. Please refresh the page.</p>;
+  if (!user) return <Loading />;
+
+  const tab = (key: 'details' | 'orders', label: string) => (
+    <button
+      type="button"
+      role="tab"
+      aria-selected={activeTab === key}
+      onClick={() => setActiveTab(key)}
+      className={`h-11 px-5 rounded-full text-sm font-medium transition-colors ${activeTab === key ? 'bg-ink text-ivory' : 'border border-line hover:border-ink'}`}
+    >
+      {label}
+    </button>
+  );
+
+  const statusTone = (status: string) =>
+    status === 'DELIVERED' ? 'bg-ink text-ivory' : status === 'CANCELLED' ? 'bg-sand text-stone' : 'bg-linen text-brass';
 
   return (
-    <div className="max-w-[1400px] mx-auto px-6 py-24 bg-white min-h-screen">
-      <h1 className="text-5xl font-black uppercase tracking-tight mb-16">PROFILE</h1>
-      
-      <div className="flex flex-col md:flex-row gap-24">
-        
-        {/* Sidebar */}
-        <aside className="w-full md:w-64 flex-shrink-0">
-          <div className="mb-12">
-            <h2 className="text-2xl font-black uppercase tracking-widest">{user.name}</h2>
-            <p className="text-sm font-bold uppercase tracking-widest opacity-50 mt-2">{user.email}</p>
-          </div>
-
-          <div className="flex flex-col space-y-6 text-sm font-bold uppercase tracking-widest">
-            <button 
-              onClick={() => setActiveTab('details')}
-              className={`text-left transition-opacity ${activeTab === 'details' ? 'opacity-100 underline underline-offset-4' : 'opacity-50 hover:opacity-100'}`}
-            >
-              Account Details
-            </button>
-            <button 
-              onClick={() => setActiveTab('orders')}
-              className={`text-left transition-opacity ${activeTab === 'orders' ? 'opacity-100 underline underline-offset-4' : 'opacity-50 hover:opacity-100'}`}
-            >
-              Order History
-            </button>
-            {user.role === 'ADMIN' && (
-              <Link href="/admin" className="text-left opacity-50 hover:opacity-100 transition-opacity">
-                Admin Dashboard
-              </Link>
-            )}
-            <button onClick={handleLogout} className="text-left text-red-600 hover:opacity-70 transition-opacity pt-6 border-t border-black">
-              SIGN OUT
-            </button>
-          </div>
-        </aside>
-
-        {/* Content */}
-        <div className="flex-1">
-          <div className="min-h-[400px]">
-            {activeTab === 'details' && (
-              <div className="animate-in fade-in duration-300">
-                <h2 className="text-2xl font-black uppercase tracking-widest mb-12 border-b border-black pb-4">Account Details</h2>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-2xl mb-16">
-                  <div>
-                    <label className="block text-sm font-bold uppercase tracking-widest opacity-50 mb-2">Full Name</label>
-                    <div className="text-xl font-black uppercase">{user.name}</div>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-bold uppercase tracking-widest opacity-50 mb-2">Email Address</label>
-                    <div className="text-xl font-black uppercase">{user.email}</div>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-bold uppercase tracking-widest opacity-50 mb-2">Account Role</label>
-                    <div className="text-xl font-black uppercase">
-                      {user.role}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="pt-12 border-t border-black">
-                  <h3 className="text-lg font-black uppercase tracking-widest text-red-600 mb-4">Danger Zone</h3>
-                  <p className="text-sm font-bold opacity-70 mb-6">Permanently delete your account. Your wishlist and reviews are deleted; past orders are kept without your name or email, as required for tax records. This cannot be undone.</p>
-                  <button 
-                    onClick={handleDeleteAccount}
-                    disabled={deleting}
-                    className="border border-red-600 text-red-600 px-6 py-3 rounded-full text-sm font-bold uppercase tracking-widest hover:bg-red-600 hover:text-white transition disabled:opacity-50"
-                  >
-                    {deleting ? 'Deleting...' : 'Delete My Account'}
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {activeTab === 'orders' && (
-              <div className="animate-in fade-in duration-300">
-                <h2 className="text-2xl font-black uppercase tracking-widest mb-12 border-b border-black pb-4">Order History</h2>
-                
-                {orders.length === 0 ? (
-                  <div className="text-center py-20">
-                    <h3 className="text-2xl font-black uppercase tracking-widest opacity-50 mb-6">No orders yet</h3>
-                    <Link href="/shop" className="border border-black rounded-full px-8 py-3 text-sm font-bold uppercase tracking-widest hover:bg-black hover:text-white transition inline-block">
-                      START SHOPPING
-                    </Link>
-                  </div>
-                ) : (
-                  <div className="space-y-8">
-                    {orders.map((order) => (
-                      <div key={order.id} className="border border-black p-8">
-                        <div className="flex flex-col md:flex-row justify-between md:items-end gap-6 mb-8 border-b border-gray-200 pb-8">
-                          <div>
-                            <p className="text-sm font-bold uppercase tracking-widest opacity-50 mb-2">ORDER #{order.id.slice(-8).toUpperCase()}</p>
-                            <p className="text-xl font-black uppercase">{new Date(order.createdAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
-                          </div>
-                          <div className="md:text-right">
-                            <p className="text-sm font-bold uppercase tracking-widest opacity-50 mb-2">TOTAL AMOUNT</p>
-                            <p className="text-2xl font-black">₹{order.totalAmount.toLocaleString('en-IN')}</p>
-                          </div>
-                        </div>
-                        
-                        <div className="flex justify-between items-center text-sm font-bold uppercase tracking-widest">
-                          <div>
-                            <span className="opacity-50 mr-4">STATUS:</span>
-                            <span className={order.orderStatus === 'DELIVERED' ? 'text-black' : 'text-gray-500'}>
-                              {order.orderStatus}
-                            </span>
-                          </div>
-                          
-                          <Link href={`/profile/orders/${order.id}`} className="border-b border-black hover:opacity-70 transition pb-1">
-                            VIEW DETAILS
-                          </Link>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
+    <div className="pb-24">
+      <PageHeader eyebrow="My account" title={<>Hello, <em className="text-brass">{user.name.split(' ')[0]}</em></>} intro={user.email}>
+        <div className="flex flex-wrap gap-3">
+          {user.role === 'ADMIN' && <Link href="/admin" className="btn btn-outline">Admin dashboard</Link>}
+          <button onClick={handleLogout} className="btn btn-outline">Sign out</button>
         </div>
-        
+      </PageHeader>
+
+      <div className="max-w-[1440px] mx-auto px-5 md:px-10 pt-10">
+        <div className="flex gap-2" role="tablist" aria-label="Account sections">
+          {tab('orders', `Orders${orders.length ? ` (${orders.length})` : ''}`)}
+          {tab('details', 'Account details')}
+        </div>
+
+        <div className="mt-10" role="tabpanel">
+          {activeTab === 'orders' && (
+            orders.length === 0 ? (
+              <div className="card p-10 md:p-16 text-center">
+                <p className="font-display text-4xl">No orders yet</p>
+                <p className="mt-3 text-stone">When you place an order, you can follow it here.</p>
+                <Link href="/shop" className="btn btn-primary mt-8">Start shopping</Link>
+              </div>
+            ) : (
+              <ul className="grid md:grid-cols-2 gap-5">
+                {orders.map((order) => (
+                  <li key={order.id}>
+                    <Link href={`/profile/orders/${order.id}`} className="card p-6 md:p-8 flex flex-col gap-6 hover:border-stone transition-colors group">
+                      <div className="flex justify-between items-start gap-4">
+                        <div>
+                          <p className="text-xs tracking-[0.16em] uppercase text-stone">Order #{order.id.slice(-8).toUpperCase()}</p>
+                          <p className="font-display text-2xl mt-2">
+                            {new Date(order.createdAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}
+                          </p>
+                        </div>
+                        <span className={`rounded-full px-3 py-1 text-[11px] font-semibold tracking-[0.12em] uppercase ${statusTone(order.orderStatus)}`}>
+                          {order.orderStatus.toLowerCase()}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-end">
+                        <p className="font-semibold">{formatPrice(order.totalAmount)}</p>
+                        <span className="text-sm link-draw group-hover:[background-size:100%_1px]">View details →</span>
+                      </div>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )
+          )}
+
+          {activeTab === 'details' && (
+            <div className="grid lg:grid-cols-2 gap-6">
+              <dl className="card p-8 space-y-6">
+                <div>
+                  <dt className="field-label">Full name</dt>
+                  <dd className="mt-2 text-lg">{user.name}</dd>
+                </div>
+                <div>
+                  <dt className="field-label">Email address</dt>
+                  <dd className="mt-2 text-lg break-all">{user.email}</dd>
+                </div>
+              </dl>
+              <div className="card p-8">
+                <h2 className="font-display text-3xl">Delete account</h2>
+                <p className="mt-3 text-sm text-stone leading-relaxed">
+                  Your wishlist and reviews are deleted. Past orders are kept without your name or email, as required for tax records. This cannot be undone.
+                </p>
+                <button 
+                  onClick={handleDeleteAccount}
+                  disabled={deleting}
+                  className="btn mt-6 border border-red-700 text-red-700 hover:bg-red-700 hover:text-ivory"
+                >
+                  {deleting ? 'Deleting…' : 'Delete my account'}
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -2,6 +2,9 @@ import { prisma } from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 import { getSession } from '@/lib/auth';
 import Link from 'next/link';
+import Image from 'next/image';
+import { ArrowLeft } from 'lucide-react';
+import { displayTitle, formatPrice } from '@/lib/format';
 import { parseImages, productImage } from '@/lib/images';
 
 export default async function CustomerOrderDetailsPage({ params }: { params: Promise<{ id: string }> }) {
@@ -29,101 +32,90 @@ export default async function CustomerOrderDetailsPage({ params }: { params: Pro
   let address = { name: '', street: '', city: '', state: '', pincode: '', phone: '' };
   try { address = JSON.parse(order.shippingAddress); } catch {}
 
+  const steps = ['PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED'];
+  const stepLabels = ['Order placed', 'Being prepared', 'On the way', 'Delivered'];
+  const current = steps.indexOf(order.orderStatus);
+  const cancelled = order.orderStatus === 'CANCELLED';
+
   return (
-    <div className="max-w-[1400px] mx-auto px-6 py-24 bg-white min-h-screen">
-      <Link href="/profile" className="inline-flex items-center text-sm font-bold uppercase tracking-widest opacity-50 hover:opacity-100 transition mb-16 border-b border-black pb-1">
-        BACK TO PROFILE
+    <div className="max-w-[1100px] mx-auto px-5 md:px-10 py-10 md:py-16">
+      <Link href="/profile" className="inline-flex items-center gap-2 text-sm text-stone link-draw">
+        <ArrowLeft size={14} aria-hidden="true" /> My account
       </Link>
 
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16 border-b border-black pb-8">
+      <header className="mt-8 flex flex-wrap justify-between items-end gap-6 pb-8 border-b border-line">
         <div>
-          <h1 className="text-5xl font-black uppercase tracking-tight">ORDER #{order.id.slice(-8).toUpperCase()}</h1>
-          <p className="text-sm font-bold uppercase tracking-widest opacity-50 mt-4">PLACED ON {new Date(order.createdAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+          <p className="eyebrow">Order #{order.id.slice(-8).toUpperCase()}</p>
+          <h1 className="font-display text-5xl md:text-6xl leading-none mt-5">
+            Placed {new Date(order.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
+          </h1>
         </div>
-        <span className={`px-6 py-2 text-sm font-bold uppercase tracking-widest ${
-          order.orderStatus === 'DELIVERED' ? 'bg-black text-white' : 
-          'border border-black text-black'
-        }`}>
-          {order.orderStatus}
-        </span>
-      </div>
+      </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-24">
-        <div className="border border-black p-8">
-          <div className="font-black text-xl uppercase mb-6 border-b border-black pb-4">
-            SHIPPING ADDRESS
-          </div>
-          <div className="text-black text-sm font-bold uppercase tracking-widest space-y-2 opacity-70">
-            <p className="opacity-100">{address.name}</p>
-            <p>{address.street}</p>
-            <p>{address.city}, {address.state} {address.pincode}</p>
-            <p className="pt-4 mt-4 border-t border-gray-200">PHONE: {address.phone}</p>
-          </div>
+      {/* Progress */}
+      {cancelled ? (
+        <p className="mt-10 card p-6 text-stone">This order was cancelled. If you were charged, your refund is processed within 5–7 business days.</p>
+      ) : (
+        <ol className="mt-10 grid grid-cols-4 gap-2" aria-label="Order progress">
+          {stepLabels.map((label, idx) => {
+            const done = idx <= current;
+            return (
+              <li key={label} className="flex flex-col gap-3" aria-current={idx === current ? 'step' : undefined}>
+                <span className={`h-1 rounded-full ${done ? 'bg-brass' : 'bg-line'}`} />
+                <span className={`text-xs md:text-sm ${done ? 'text-ink font-semibold' : 'text-stone'}`}>{label}</span>
+              </li>
+            );
+          })}
+        </ol>
+      )}
+
+      <div className="mt-12 grid md:grid-cols-3 gap-5">
+        <div className="card p-6">
+          <h2 className="field-label">Delivering to</h2>
+          <address className="not-italic mt-3 text-sm leading-relaxed">
+            <span className="font-semibold">{address.name}</span><br />
+            {address.street}<br />
+            {address.city}, {address.state} {address.pincode}<br />
+            <span className="text-stone">Phone: {address.phone}</span>
+          </address>
         </div>
-
-        <div className="border border-black p-8">
-          <div className="font-black text-xl uppercase mb-6 border-b border-black pb-4">
-            PAYMENT INFO
-          </div>
-          <div className="text-black text-sm font-bold uppercase tracking-widest space-y-4">
-            <div className="flex justify-between">
-              <span className="opacity-50">METHOD:</span>
-              <span>{order.paymentMethod === 'COD' ? 'CASH ON DELIVERY' : order.paymentMethod}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="opacity-50">STATUS:</span>
-              <span className={order.paymentStatus === 'PAID' ? 'text-black' : 'opacity-50'}>
-                {order.paymentStatus}
-              </span>
-            </div>
-          </div>
+        <div className="card p-6">
+          <h2 className="field-label">Payment</h2>
+          <p className="mt-3 text-sm">{order.paymentMethod === 'COD' ? 'Cash on delivery' : 'Online (Razorpay)'}</p>
+          <p className="mt-1 text-sm text-stone">{order.paymentStatus === 'PAID' ? 'Paid' : order.paymentStatus === 'COD' ? 'Pay when it arrives' : order.paymentStatus.toLowerCase()}</p>
         </div>
-
-        <div className="border border-black bg-black text-white p-8">
-          <div className="font-black text-xl uppercase mb-6 border-b border-white pb-4">
-            DELIVERY ESTIMATE
-          </div>
-          <div className="text-white text-sm font-bold uppercase tracking-widest space-y-4 opacity-70">
-            <p>TYPICALLY DELIVERED WITHIN 5-7 BUSINESS DAYS FROM DISPATCH.</p>
-            {order.trackingNumber && (
-              <p className="mt-6 pt-6 border-t border-white opacity-100">
-                TRACKING: {order.trackingNumber}
-              </p>
-            )}
-          </div>
+        <div className="card p-6">
+          <h2 className="field-label">Delivery</h2>
+          <p className="mt-3 text-sm leading-relaxed">Usually 5–7 business days from dispatch. We call before every delivery.</p>
+          {order.trackingNumber && <p className="mt-2 text-sm text-stone">Tracking: {order.trackingNumber}</p>}
         </div>
       </div>
 
-      <h2 className="text-3xl font-black uppercase tracking-tight mb-8 border-b border-black pb-4">PURCHASED ITEMS</h2>
-      <div className="space-y-8">
+      <h2 className="font-display text-4xl mt-16 mb-6">Your pieces</h2>
+      <ul className="divide-y divide-line border-y border-line">
         {order.items.map((item) => {
-          const coverImage = productImage(parseImages(item.product.images)[0] || '', 200);
-          
+          const coverImage = productImage(parseImages(item.product.images)[0] || '', 240);
           return (
-            <div key={item.id} className="flex flex-col md:flex-row items-start md:items-center gap-8 border-b border-gray-200 pb-8">
-              <div className="w-32 h-32 bg-[#F5F5F5] overflow-hidden flex-shrink-0">
-                <img src={coverImage} alt={item.product.title} className="w-full h-full object-cover" />
-              </div>
-              <div className="flex-grow">
-                <Link href={`/products/${item.productId}`} className="text-xl font-black uppercase hover:opacity-70 transition line-clamp-1">
-                  {item.product.title}
+            <li key={item.id} className="py-5 flex items-center gap-5">
+              <span className="relative w-20 h-24 shrink-0 overflow-hidden rounded-xl bg-sand">
+                <Image src={coverImage} alt="" fill sizes="80px" className="object-cover" unoptimized />
+              </span>
+              <div className="flex-1 min-w-0">
+                <Link href={`/products/${item.productId}`} className="font-display text-2xl leading-tight hover:text-brass transition-colors line-clamp-2">
+                  {displayTitle(item.product.title)}
                 </Link>
-                <p className="text-sm font-bold uppercase tracking-widest opacity-50 mt-2">QTY: {item.quantity}</p>
+                <p className="text-sm text-stone mt-1">Qty {item.quantity} · {formatPrice(item.price)} each</p>
               </div>
-              <div className="text-right flex-shrink-0">
-                <p className="text-xl font-black">₹{(item.price * item.quantity).toLocaleString('en-IN')}</p>
-              </div>
-            </div>
+              <p className="font-semibold">{formatPrice(item.price * item.quantity)}</p>
+            </li>
           );
         })}
-      </div>
+      </ul>
 
-      <div className="mt-16 pt-8 flex justify-end">
-        <div className="w-full max-w-sm">
-          <div className="flex justify-between items-center">
-            <span className="font-bold text-sm uppercase tracking-widest opacity-50">{order.paymentStatus === 'PAID' ? 'TOTAL PAID' : 'TOTAL PAYABLE'}</span>
-            <span className="font-black text-4xl">₹{order.totalAmount.toLocaleString('en-IN')}</span>
-          </div>
+      <div className="mt-8 flex justify-end">
+        <div className="w-full max-w-xs flex justify-between items-baseline">
+          <span className="text-sm text-stone">{order.paymentStatus === 'PAID' ? 'Total paid' : 'Total payable'}</span>
+          <span className="font-display text-4xl">{formatPrice(order.totalAmount)}</span>
         </div>
       </div>
     </div>

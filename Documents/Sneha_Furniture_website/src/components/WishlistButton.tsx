@@ -5,24 +5,25 @@ import { useWishlist } from '@/context/WishlistContext';
 
 export default function WishlistButton({ productId, className = "" }: { productId: string, className?: string }) {
   const { wishlistIds, toggleWishlist, isLoading } = useWishlist();
-
-  if (isLoading) return null;
-
   const isWishlisted = wishlistIds.includes(productId);
 
   return (
-    <button 
+    <button
+      type="button"
       onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
         toggleWishlist(productId);
       }}
-      className={`absolute top-4 right-4 z-10 bg-white/80 backdrop-blur-sm p-2 rounded-full hover:bg-white transition flex items-center justify-center text-black ${className}`}
-      title={isWishlisted ? "Remove from Wishlist" : "Add to Wishlist"}
+      disabled={isLoading}
+      aria-pressed={isWishlisted}
+      aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
+      className={`grid place-items-center w-10 h-10 rounded-full bg-ivory/90 backdrop-blur text-ink transition-[transform,background-color] duration-300 hover:scale-110 hover:bg-ivory active:scale-95 disabled:opacity-60 ${className}`}
     >
-      <Heart 
-        size={20} 
-        className={isWishlisted ? "fill-black text-black" : "text-black"} 
+      <Heart
+        size={17}
+        strokeWidth={1.7}
+        className={`transition-colors duration-300 ${isWishlisted ? 'fill-brass text-brass' : ''}`}
       />
     </button>
   );

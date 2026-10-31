@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import AuthLayout from '@/components/AuthLayout';
 import { safeRedirectPath } from '@/lib/site';
 
 export default function RegisterPage() {
@@ -39,92 +40,46 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white px-6 py-24">
-      <div className="w-full max-w-lg">
-        <h1 className="text-5xl font-black font-sans text-center mb-16 uppercase tracking-tight">CREATE ACCOUNT</h1>
-        
-        {error && (
-          <div className="border border-black p-4 text-sm font-bold uppercase tracking-widest mb-8 text-center bg-black text-white">
-            {error}
-          </div>
-        )}
+    <AuthLayout eyebrow="Join us" title={<>Create an <em className="text-brass">account</em></>}>
+      {error && (
+        <p role="alert" className="mb-8 rounded-xl border border-red-700/40 bg-red-50 text-red-800 p-4 text-sm">{error}</p>
+      )}
 
-        <form onSubmit={handleRegister} className="space-y-12">
-          <div>
-            <input 
-              type="text" 
-              required
-              value={name}
-              onChange={e => setName(e.target.value)}
-              className="w-full border-b border-black py-4 outline-none text-sm font-bold uppercase tracking-widest bg-transparent placeholder-gray-400"
-              placeholder="FULL NAME"
-            />
-          </div>
+      <form onSubmit={handleRegister} className="space-y-8">
+        <label className="block">
+          <span className="field-label">Full name</span>
+          <input type="text" required autoComplete="name" maxLength={100} value={name} onChange={e => setName(e.target.value)} className="field" />
+        </label>
+        <label className="block">
+          <span className="field-label">Email address</span>
+          <input type="email" required autoComplete="email" value={email} onChange={e => setEmail(e.target.value)} className="field" />
+        </label>
+        <label className="block">
+          <span className="field-label">Password</span>
+          <input type="password" required minLength={8} autoComplete="new-password" value={password} onChange={e => setPassword(e.target.value)} className="field" aria-describedby="pw-hint" />
+          <span id="pw-hint" className="block mt-2 text-xs text-stone">At least 8 characters.</span>
+        </label>
 
-          <div>
-            <input 
-              type="email" 
-              required
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              className="w-full border-b border-black py-4 outline-none text-sm font-bold uppercase tracking-widest bg-transparent placeholder-gray-400"
-              placeholder="EMAIL ADDRESS"
-            />
-          </div>
-          
-          <div>
-            <input 
-              type="password" 
-              required
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              className="w-full border-b border-black py-4 outline-none text-sm font-bold uppercase tracking-widest bg-transparent placeholder-gray-400"
-              placeholder="PASSWORD (MIN. 8 CHARACTERS)"
-              minLength={8}
-              autoComplete="new-password"
-            />
-          </div>
-
-          <div className="space-y-4 pt-4">
-            <label className="flex items-start gap-3 cursor-pointer group">
-              <input 
-                type="checkbox" 
-                required 
-                className="mt-1 w-4 h-4 rounded-none border-black text-black focus:ring-black accent-black"
-              />
-              <span className="text-xs font-bold uppercase tracking-widest opacity-80 group-hover:opacity-100 transition">
-                I agree to the <Link href="/terms" className="border-b border-black pb-0.5">Terms of Service</Link> and <Link href="/privacy" className="border-b border-black pb-0.5">Privacy Policy</Link>
-              </span>
-            </label>
-
-            <label className="flex items-start gap-3 cursor-pointer group">
-              <input 
-                type="checkbox" 
-                required 
-                className="mt-1 w-4 h-4 rounded-none border-black text-black focus:ring-black accent-black"
-              />
-              <span className="text-xs font-bold uppercase tracking-widest opacity-80 group-hover:opacity-100 transition">
-                I confirm that I am 18 years of age or older
-              </span>
-            </label>
-          </div>
-
-          <button 
-            type="submit" 
-            disabled={loading}
-            className="w-full bg-black text-white py-4 rounded-full font-bold text-sm tracking-widest uppercase hover:bg-black/80 transition disabled:opacity-50"
-          >
-            {loading ? 'CREATING...' : 'CREATE ACCOUNT'}
-          </button>
-        </form>
-
-        <div className="mt-12 text-center text-sm font-bold uppercase tracking-widest">
-          <span className="opacity-50">ALREADY REGISTERED? </span>
-          <Link href="/login" className="border-b border-black hover:opacity-70 transition pb-1">
-            SIGN IN
-          </Link>
+        <div className="space-y-4 text-sm text-stone">
+          <label className="flex items-start gap-3 cursor-pointer">
+            <input type="checkbox" required className="mt-0.5 w-4 h-4 accent-[#1F1A17]" />
+            <span>I agree to the <Link href="/terms" className="underline underline-offset-2 text-ink">Terms</Link> and <Link href="/privacy" className="underline underline-offset-2 text-ink">Privacy Policy</Link></span>
+          </label>
+          <label className="flex items-start gap-3 cursor-pointer">
+            <input type="checkbox" required className="mt-0.5 w-4 h-4 accent-[#1F1A17]" />
+            <span>I confirm that I am 18 years of age or older</span>
+          </label>
         </div>
-      </div>
-    </div>
+
+        <button type="submit" disabled={loading} className="btn btn-primary w-full">
+          {loading ? 'Creating account…' : 'Create account'}
+        </button>
+      </form>
+
+      <p className="mt-10 text-sm text-stone">
+        Already have an account?{' '}
+        <Link href="/login" className="link-draw text-ink font-semibold">Sign in</Link>
+      </p>
+    </AuthLayout>
   );
 }

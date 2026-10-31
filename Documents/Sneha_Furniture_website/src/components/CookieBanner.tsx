@@ -31,23 +31,14 @@ export default function CookieBanner() {
   if (consent === 'unset' || (consent !== null && !reopened)) return null;
 
   return (
-    <div role="dialog" aria-label="Cookie consent" className="fixed bottom-0 left-0 right-0 bg-black text-white p-6 z-[100] flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-gray-800">
-      <div className="text-sm font-medium opacity-90 max-w-4xl">
-        We use essential cookies to keep you signed in and remember your cart. With your permission, we also use Google Analytics cookies to understand how visitors use our site. You can change this choice any time from &quot;Cookie Settings&quot; in the footer. Read our <Link href="/privacy" className="underline hover:text-gray-300">Privacy Policy</Link>.
-      </div>
-      <div className="flex gap-4">
-        <button
-          onClick={handleReject}
-          className="shrink-0 bg-transparent text-white border border-white px-8 py-3 rounded-full text-sm font-bold uppercase tracking-widest hover:bg-gray-800 transition"
-        >
-          Reject
-        </button>
-        <button
-          onClick={handleAccept}
-          className="shrink-0 bg-white text-black px-8 py-3 rounded-full text-sm font-bold uppercase tracking-widest hover:bg-gray-200 transition"
-        >
-          Accept
-        </button>
+    <div role="dialog" aria-label="Cookie consent" className="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:bottom-6 sm:max-w-md z-[100] card bg-[#FBF8F3] shadow-[0_24px_60px_-20px_rgba(31,26,23,0.45)] p-6">
+      <p className="font-display text-2xl">A note on cookies</p>
+      <p className="mt-2 text-sm text-stone leading-relaxed">
+        We use essential cookies to keep you signed in and remember your bag. With your permission, we also use Google Analytics to understand how the site is used. Change this any time from &quot;Cookie Settings&quot; in the footer. <Link href="/privacy" className="underline underline-offset-2 text-ink">Privacy Policy</Link>
+      </p>
+      <div className="mt-5 flex gap-3">
+        <button onClick={handleReject} className="btn btn-outline flex-1 !min-h-11 !px-4">Reject</button>
+        <button onClick={handleAccept} className="btn btn-primary flex-1 !min-h-11 !px-4">Accept</button>
       </div>
     </div>
   );

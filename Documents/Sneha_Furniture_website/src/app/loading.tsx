@@ -1,11 +1,11 @@
+import ArmchairMark from '@/components/ArmchairMark';
+
+// Route-level loading state: a small armchair that keeps drawing itself.
 export default function Loading() {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-sm">
-      <div className="flex flex-col items-center gap-4">
-        {/* Sleek minimal spinner */}
-        <div className="w-12 h-12 border-4 border-gray-200 border-t-black rounded-full animate-spin"></div>
-        <p className="text-xs font-black uppercase tracking-widest text-black animate-pulse">Loading...</p>
-      </div>
+    <div className="min-h-[70vh] flex flex-col items-center justify-center gap-5" role="status">
+      <ArmchairMark className="chair-loop w-20 text-brass" strokeWidth={2} stagger={0.12} />
+      <p className="text-[11px] font-semibold tracking-[0.3em] uppercase text-stone">Setting the room…</p>
     </div>
   );
 }

@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
-import { MapPin, Phone, Mail, Clock } from 'lucide-react';
 import Image from 'next/image';
+import { MapPin, Phone, Mail, Clock, ArrowUpRight, MessageCircle } from 'lucide-react';
 import ContactForm from '@/components/ContactForm';
 import GrievanceOfficer from '@/components/GrievanceOfficer';
-import { ADDRESS, BRAND_NAME, CONTACT_EMAIL, PHONES } from '@/lib/site';
+import PageHeader from '@/components/PageHeader';
+import { ADDRESS, BRAND_NAME, CONTACT_EMAIL, PHONES, WHATSAPP_NUMBER } from '@/lib/site';
 
 export const metadata: Metadata = {
   title: 'Contact Us & Showroom',
@@ -12,114 +13,79 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <div className="max-w-7xl mx-auto px-4 py-16">
-      <div className="text-center mb-16">
-        <h1 className="text-4xl font-bold font-heading mb-4">Visit Our Showroom</h1>
-        <div className="w-24 h-1 bg-primary mx-auto mb-6"></div>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          Experience the premium quality and craftsmanship of our furniture in person. 
-          Our showroom in Dehradun features our finest collections.
-        </p>
-      </div>
+    <div className="pb-24">
+      <PageHeader
+        eyebrow="Visit us"
+        title={<>Come and <em className="text-brass">sit a while</em></>}
+        intro="See our collections in person at the showroom in Dehradun, or send us a message and we will get back to you within a day."
+      />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-        {/* Contact Info */}
-        <div className="space-y-8">
-          <div className="bg-white p-8 rounded-sm shadow-sm border border-gray-100">
-            <h2 className="text-2xl font-bold font-heading mb-6 border-b pb-4">Contact Information</h2>
-            
-            <div className="space-y-6">
-              <div className="flex items-start gap-4">
-                <div className="p-3 bg-amber-50 text-primary rounded-full">
-                  <MapPin size={24} />
-                </div>
-                <div>
-                  <h3 className="font-bold text-gray-900 mb-1">Showroom Address</h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    {ADDRESS.street},<br />
-                    {ADDRESS.city}, {ADDRESS.state} {ADDRESS.pincode}
-                  </p>
-                </div>
+      <div className="max-w-[1440px] mx-auto px-5 md:px-10 pt-12 md:pt-16 grid lg:grid-cols-[1fr_1.1fr] gap-12 lg:gap-20 items-start">
+        {/* Details */}
+        <div className="space-y-5">
+          <div className="card overflow-hidden" data-reveal>
+            <div className="relative aspect-[16/10] bg-sand">
+              <Image src="/table.jpg" alt="Dining furniture on display" fill sizes="(min-width: 1024px) 45vw, 100vw" className="object-cover" />
+            </div>
+            <div className="p-6 flex flex-wrap items-start justify-between gap-4">
+              <div className="flex gap-4">
+                <MapPin size={20} strokeWidth={1.5} className="text-brass shrink-0 mt-1" aria-hidden="true" />
+                <address className="not-italic leading-relaxed">
+                  <span className="font-display text-2xl block">Showroom</span>
+                  {ADDRESS.street}<br />{ADDRESS.city}, {ADDRESS.state} {ADDRESS.pincode}
+                </address>
               </div>
-
-              <div className="flex items-start gap-4">
-                <div className="p-3 bg-amber-50 text-primary rounded-full">
-                  <Phone size={24} />
-                </div>
-                <div>
-                  <h3 className="font-bold text-gray-900 mb-1">Phone Numbers</h3>
-                  {PHONES.map((p) => (
-                    <p key={p.tel}><a href={`tel:${p.tel}`} className="text-gray-600 hover:text-black">{p.display}</a></p>
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="p-3 bg-amber-50 text-primary rounded-full">
-                  <Mail size={24} />
-                </div>
-                <div>
-                  <h3 className="font-bold text-gray-900 mb-1">Email Address</h3>
-                  <a href={`mailto:${CONTACT_EMAIL}`} className="text-gray-600 hover:text-black break-all">{CONTACT_EMAIL}</a>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="p-3 bg-amber-50 text-primary rounded-full">
-                  <Clock size={24} />
-                </div>
-                <div>
-                  <h3 className="font-bold text-gray-900 mb-1">Operating Hours</h3>
-                  <p className="text-gray-600">
-                    Monday to Saturday: 10:30 AM – 8:00 PM<br />
-                    <span className="text-red-500 font-medium">Sundays Closed</span>
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4 mt-8 pt-6 border-t border-gray-100">
-                <div className="p-3 bg-red-50 text-red-600 rounded-full">
-                  <Mail size={24} />
-                </div>
-                <div>
-                  <h3 className="font-bold text-gray-900 mb-1">Grievance Officer</h3>
-                  <p className="text-gray-600 text-sm mb-2">
-                    In accordance with the Consumer Protection (E-Commerce) Rules, 2020:
-                  </p>
-                  <GrievanceOfficer className="text-gray-600 text-sm space-y-1" />
-                </div>
-              </div>
+              <a href="https://maps.app.goo.gl/FFm6prxW6b9yJtcKA" target="_blank" rel="noopener noreferrer" className="btn btn-outline !min-h-11 !px-5">
+                Directions <ArrowUpRight size={15} />
+              </a>
             </div>
           </div>
 
-          <div className="bg-white p-8 rounded-sm shadow-sm border border-gray-100">
-            <h2 className="text-2xl font-bold font-heading mb-6 border-b pb-4">Send us a Message</h2>
-            <ContactForm />
+          <div className="grid sm:grid-cols-2 gap-5">
+            <div className="card p-6" data-reveal>
+              <Clock size={20} strokeWidth={1.5} className="text-brass" aria-hidden="true" />
+              <h2 className="font-display text-2xl mt-4">Opening hours</h2>
+              <p className="mt-2 text-sm text-stone leading-relaxed">Monday – Saturday<br />10:30 AM – 8:00 PM<br />Closed on Sundays</p>
+            </div>
+            <div className="card p-6" data-reveal style={{ '--reveal-delay': '100ms' } as React.CSSProperties}>
+              <Phone size={20} strokeWidth={1.5} className="text-brass" aria-hidden="true" />
+              <h2 className="font-display text-2xl mt-4">Call us</h2>
+              <div className="mt-2 text-sm space-y-1">
+                {PHONES.map((p) => (
+                  <a key={p.tel} href={`tel:${p.tel}`} className="block link-draw w-fit">{p.display}</a>
+                ))}
+              </div>
+            </div>
+            <div className="card p-6" data-reveal>
+              <Mail size={20} strokeWidth={1.5} className="text-brass" aria-hidden="true" />
+              <h2 className="font-display text-2xl mt-4">Email</h2>
+              <a href={`mailto:${CONTACT_EMAIL}`} className="mt-2 block text-sm link-draw w-fit break-all">{CONTACT_EMAIL}</a>
+            </div>
+            <div className="card p-6" data-reveal style={{ '--reveal-delay': '100ms' } as React.CSSProperties}>
+              <MessageCircle size={20} strokeWidth={1.5} className="text-brass" aria-hidden="true" />
+              <h2 className="font-display text-2xl mt-4">WhatsApp</h2>
+              <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer" className="mt-2 block text-sm link-draw w-fit">Chat with us</a>
+            </div>
           </div>
+
+          <details className="card p-6 group" data-reveal>
+            <summary className="flex items-center justify-between cursor-pointer list-none">
+              <span className="font-display text-2xl">Grievance Officer</span>
+              <span className="text-stone text-sm group-open:hidden">Show</span>
+              <span className="text-stone text-sm hidden group-open:inline">Hide</span>
+            </summary>
+            <p className="mt-4 text-sm text-stone">In accordance with the Consumer Protection (E-Commerce) Rules, 2020:</p>
+            <GrievanceOfficer className="mt-3 text-sm text-stone space-y-1" />
+          </details>
         </div>
 
-        {/* Map / Image Placeholder */}
-        <div className="bg-gray-100 rounded-sm overflow-hidden h-[500px] border border-gray-200 flex flex-col items-center justify-center relative">
-           <Image 
-             src="https://images.unsplash.com/photo-1540638349517-3abd5afc5847?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-             alt="Showroom Location" 
-             fill
-             className="object-cover absolute inset-0 opacity-50"
-             unoptimized
-           />
-           <div className="relative z-10 bg-white/90 backdrop-blur-md p-6 rounded-sm shadow-xl text-center max-w-sm">
-             <MapPin size={48} className="mx-auto text-primary mb-4" />
-             <h3 className="text-xl font-bold mb-2">{BRAND_NAME}</h3>
-             <p className="text-gray-600 mb-4">Located in the heart of Dehradun, easily accessible from Saharanpur Road.</p>
-             <a 
-               href="https://maps.app.goo.gl/FFm6prxW6b9yJtcKA" 
-               target="_blank" 
-               rel="noopener noreferrer"
-               className="inline-block bg-primary text-white px-6 py-2 rounded-sm hover:bg-primary/90 transition"
-             >
-               Open in Google Maps
-             </a>
-           </div>
+        {/* Form */}
+        <div className="card p-8 md:p-12 lg:sticky lg:top-28" data-reveal>
+          <h2 className="font-display text-4xl md:text-5xl leading-none">Send us a message</h2>
+          <p className="mt-4 text-stone">Questions about a piece, custom sizes or delivery? We are happy to help.</p>
+          <div className="mt-10">
+            <ContactForm />
+          </div>
         </div>
       </div>
     </div>

@@ -24,10 +24,13 @@ export default function WhatsAppWidget() {
       href={whatsappUrl} 
       target="_blank" 
       rel="noopener noreferrer"
-      className="fixed bottom-6 right-6 z-50 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 hover:scale-110 transition-all duration-300 flex items-center justify-center"
-      aria-label="Chat on WhatsApp"
+      className="group fixed bottom-5 right-5 md:bottom-6 md:right-6 z-50 flex items-center gap-0 h-13 pl-3.5 pr-3.5 rounded-full bg-ink text-ivory shadow-[0_16px_40px_-12px_rgba(31,26,23,0.55)] transition-all duration-500 ease-out-soft hover:pr-5 hover:gap-2.5 hover:bg-brass"
+      aria-label="Chat with us on WhatsApp"
     >
-      <MessageCircle size={32} />
+      <MessageCircle size={22} strokeWidth={1.6} aria-hidden="true" />
+      <span className="max-w-0 overflow-hidden whitespace-nowrap text-sm font-medium transition-[max-width] duration-500 ease-out-soft group-hover:max-w-[140px]">
+        Chat with us
+      </span>
     </a>
   );
 }
